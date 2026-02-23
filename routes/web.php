@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\POS\Livewire\PosPage;
 use App\Domains\Product\Livewire\ProductForm;
 use App\Domains\Product\Livewire\ProductIndex;
 use App\Domains\Tenant\Livewire\Admin\TenantList;
@@ -21,6 +22,7 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant', 'subscription
     Route::livewire('products', ProductIndex::class)->name('products.index');
     Route::livewire('products/create', ProductForm::class)->name('products.create');
     Route::livewire('products/{productId}/edit', ProductForm::class)->name('products.edit');
+    Route::livewire('pos', PosPage::class)->name('pos');
 });
 
 Route::middleware(['auth', 'verified', 'tenant', 'superadmin'])->group(function () {
