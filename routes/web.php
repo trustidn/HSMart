@@ -7,6 +7,7 @@ use App\Domains\Purchasing\Livewire\PurchaseCreate;
 use App\Domains\Purchasing\Livewire\PurchaseIndex;
 use App\Domains\Purchasing\Livewire\SupplierForm;
 use App\Domains\Purchasing\Livewire\SupplierIndex;
+use App\Domains\Reporting\Livewire\ReportDashboard;
 use App\Domains\Tenant\Livewire\Admin\TenantList;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,7 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant', 'subscription
         Route::livewire('purchases', PurchaseIndex::class)->name('purchases.index');
         Route::livewire('purchases/create', PurchaseCreate::class)->name('purchases.create');
     });
+    Route::livewire('reports', ReportDashboard::class)->name('reports');
 });
 
 Route::middleware(['auth', 'verified', 'tenant', 'superadmin'])->group(function () {

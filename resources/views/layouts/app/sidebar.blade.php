@@ -30,6 +30,9 @@
                                 {{ __('Suppliers') }}
                             </flux:sidebar.item>
                         </flux:sidebar.group>
+                        <flux:sidebar.item icon="chart-bar" :href="route('reports')" :current="request()->routeIs('reports')" wire:navigate>
+                            {{ __('Reports') }}
+                        </flux:sidebar.item>
                     @else
                         <flux:sidebar.item icon="building-office-2" :href="route('admin.tenants')" :current="request()->routeIs('admin.*')" wire:navigate>
                             {{ __('Tenant Management') }}
