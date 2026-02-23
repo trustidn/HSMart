@@ -2,6 +2,7 @@
 
 namespace App\Domains\Tenant\Services;
 
+use App\Domains\Subscription\Services\SubscriptionService;
 use App\Domains\Tenant\Models\Tenant;
 use App\Domains\Tenant\Models\TenantSetting;
 use Illuminate\Support\Str;

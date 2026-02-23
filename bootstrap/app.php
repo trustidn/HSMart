@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'tenant' => \App\Domains\Tenant\Middleware\ResolveTenantFromAuth::class,
+            'require.tenant' => \App\Domains\Tenant\Middleware\RequireTenant::class,
+            'superadmin' => \App\Domains\Tenant\Middleware\EnsureSuperadmin::class,
             'subscription' => \App\Domains\Subscription\Middleware\CheckSubscription::class,
         ]);
     })

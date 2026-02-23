@@ -24,10 +24,10 @@ test('authenticated users with tenant and active subscription can visit the dash
     $response->assertOk();
 });
 
-test('authenticated users without tenant cannot visit the dashboard', function () {
+test('authenticated users without tenant are redirected to admin tenants', function () {
     $user = User::factory()->create(['tenant_id' => null]);
     $this->actingAs($user);
 
     $response = $this->get(route('dashboard'));
-    $response->assertForbidden();
+    $response->assertRedirect(route('admin.tenants'));
 });
