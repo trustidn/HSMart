@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -54,6 +55,16 @@ class UserFactory extends Factory
             'two_factor_secret' => encrypt('secret'),
             'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1'])),
             'two_factor_confirmed_at' => now(),
+        ]);
+    }
+
+    /**
+     * Assign the user to a tenant.
+     */
+    public function forTenant(Tenant $tenant): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'tenant_id' => $tenant->id,
         ]);
     }
 }
