@@ -17,6 +17,7 @@
                         <flux:table.cell variant="strong">{{ __('PO Number') }}</flux:table.cell>
                         <flux:table.cell variant="strong">{{ __('Date') }}</flux:table.cell>
                         <flux:table.cell variant="strong">{{ __('Supplier') }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ __('Items') }}</flux:table.cell>
                         <flux:table.cell variant="strong" align="end">{{ __('Total') }}</flux:table.cell>
                         <flux:table.cell variant="strong">{{ __('Status') }}</flux:table.cell>
                     </flux:table.row>
@@ -27,6 +28,12 @@
                             <flux:table.cell>{{ $purchase->purchase_number }}</flux:table.cell>
                             <flux:table.cell>{{ $purchase->purchase_date->format('d/m/Y') }}</flux:table.cell>
                             <flux:table.cell>{{ $purchase->supplier?->name ?? '—' }}</flux:table.cell>
+                            <flux:table.cell class="max-w-xs">
+                                @php
+                                    $itemLabels = $purchase->items->map(fn ($i) => ($i->product?->name ?? '—') . ' × ' . $i->qty);
+                                @endphp
+                                <span class="line-clamp-2" title="{{ $itemLabels->join(', ') }}">{{ $itemLabels->join(', ') }}</span>
+                            </flux:table.cell>
                             <flux:table.cell align="end">{{ number_format($purchase->total_amount, 0, ',', '.') }}</flux:table.cell>
                             <flux:table.cell>
                                 <flux:badge :color="$purchase->status === 'completed' ? 'green' : 'zinc'">
@@ -36,7 +43,7 @@
                         </flux:table.row>
                     @empty
                         <flux:table.row>
-                            <flux:table.cell colspan="5" class="text-center text-zinc-500 dark:text-zinc-400">
+                            <flux:table.cell colspan="6" class="text-center text-zinc-500 dark:text-zinc-400">
                                 {{ __('No purchases found.') }}
                             </flux:table.cell>
                         </flux:table.row>

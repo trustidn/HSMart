@@ -17,7 +17,7 @@ class PurchaseIndex extends Component
     public function purchases()
     {
         $query = Purchase::query()
-            ->with('supplier')
+            ->with(['supplier', 'items.product'])
             ->orderByDesc('purchase_date')
             ->orderByDesc('id');
 
