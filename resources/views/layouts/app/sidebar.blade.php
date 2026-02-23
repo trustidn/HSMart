@@ -22,6 +22,14 @@
                         <flux:sidebar.item icon="cube" :href="route('products.index')" :current="request()->routeIs('products.*')" wire:navigate>
                             {{ __('Products') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.group :heading="__('Purchasing')">
+                            <flux:sidebar.item icon="truck" :href="route('purchasing.purchases.index')" :current="request()->routeIs('purchasing.purchases.*')" wire:navigate>
+                                {{ __('Purchases') }}
+                            </flux:sidebar.item>
+                            <flux:sidebar.item icon="building-storefront" :href="route('purchasing.suppliers.index')" :current="request()->routeIs('purchasing.suppliers.*')" wire:navigate>
+                                {{ __('Suppliers') }}
+                            </flux:sidebar.item>
+                        </flux:sidebar.group>
                     @else
                         <flux:sidebar.item icon="building-office-2" :href="route('admin.tenants')" :current="request()->routeIs('admin.*')" wire:navigate>
                             {{ __('Tenant Management') }}

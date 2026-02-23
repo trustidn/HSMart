@@ -3,6 +3,10 @@
 use App\Domains\POS\Livewire\PosPage;
 use App\Domains\Product\Livewire\ProductForm;
 use App\Domains\Product\Livewire\ProductIndex;
+use App\Domains\Purchasing\Livewire\PurchaseCreate;
+use App\Domains\Purchasing\Livewire\PurchaseIndex;
+use App\Domains\Purchasing\Livewire\SupplierForm;
+use App\Domains\Purchasing\Livewire\SupplierIndex;
 use App\Domains\Tenant\Livewire\Admin\TenantList;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +27,13 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant', 'subscription
     Route::livewire('products/create', ProductForm::class)->name('products.create');
     Route::livewire('products/{productId}/edit', ProductForm::class)->name('products.edit');
     Route::livewire('pos', PosPage::class)->name('pos');
+    Route::prefix('purchasing')->name('purchasing.')->group(function () {
+        Route::livewire('suppliers', SupplierIndex::class)->name('suppliers.index');
+        Route::livewire('suppliers/create', SupplierForm::class)->name('suppliers.create');
+        Route::livewire('suppliers/{supplierId}/edit', SupplierForm::class)->name('suppliers.edit');
+        Route::livewire('purchases', PurchaseIndex::class)->name('purchases.index');
+        Route::livewire('purchases/create', PurchaseCreate::class)->name('purchases.create');
+    });
 });
 
 Route::middleware(['auth', 'verified', 'tenant', 'superadmin'])->group(function () {

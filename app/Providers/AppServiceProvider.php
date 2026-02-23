@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Domains\Accounting\Listeners\RecordPurchaseJournal;
 use App\Domains\Accounting\Listeners\RecordSaleJournal;
 use App\Domains\POS\Events\SaleCompleted;
 use App\Domains\POS\Listeners\DeductSaleStock;
+use App\Domains\Purchasing\Events\PurchaseCompleted;
+use App\Domains\Purchasing\Listeners\AddPurchaseStock;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         Event::listen(SaleCompleted::class, DeductSaleStock::class);
         Event::listen(SaleCompleted::class, RecordSaleJournal::class);
+        Event::listen(PurchaseCompleted::class, AddPurchaseStock::class);
+        Event::listen(PurchaseCompleted::class, RecordPurchaseJournal::class);
     }
 
     /**

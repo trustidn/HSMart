@@ -6,6 +6,7 @@ use App\Domains\Accounting\Models\Account;
 use App\Domains\Accounting\Models\Journal;
 use App\Domains\Accounting\Models\JournalItem;
 use App\Domains\POS\Models\Sale;
+use App\Domains\Purchasing\Models\Purchase;
 use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 
@@ -94,6 +95,42 @@ class JournalService
             [
                 ['account_id' => $kas->id, 'debit' => $amount, 'credit' => 0, 'description' => 'Penjualan #'.$sale->sale_number],
                 ['account_id' => $penjualan->id, 'debit' => 0, 'credit' => $amount, 'description' => 'Penjualan #'.$sale->sale_number],
+            ]
+        );
+    }
+
+    /**
+     * Record journal for a completed purchase (hutang): Debit Persediaan, Credit Hutang.
+     */
+    public function recordPurchaseJournal(Purchase $purchase): Journal
+    {
+        $tenant = $purchase->tenant;
+        $this->ensureDefaultAccounts($tenant);
+
+        $persediaan = Account::withoutGlobalScopes()->where('tenant_id', $tenant->id)->where('code', self::CODE_PERSEDIAAN)->firstOrFail();
+        $hutang = Account::withoutGlobalScopes()->where('tenant_id', $tenant->id)->where('code', self::CODE_HUTANG)->firstOrFail();
+
+        $amount = (float) $purchase->total_amount;
+        if ($amount <= 0) {
+            return $this->createJournal(
+                $tenant,
+                $purchase->purchase_date,
+                'Pembelian #'.$purchase->purchase_number.' (nilai nol)',
+                $purchase->getMorphClass(),
+                $purchase->id,
+                []
+            );
+        }
+
+        return $this->createJournal(
+            $tenant,
+            $purchase->purchase_date,
+            'Pembelian #'.$purchase->purchase_number,
+            $purchase->getMorphClass(),
+            $purchase->id,
+            [
+                ['account_id' => $persediaan->id, 'debit' => $amount, 'credit' => 0, 'description' => 'Pembelian #'.$purchase->purchase_number],
+                ['account_id' => $hutang->id, 'debit' => 0, 'credit' => $amount, 'description' => 'Pembelian #'.$purchase->purchase_number],
             ]
         );
     }
