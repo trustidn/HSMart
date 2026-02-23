@@ -9,7 +9,7 @@
                             <flux:input
                                 wire:model="barcodeInput"
                                 placeholder="{{ __('Scan or enter barcode / SKU') }}"
-                                icon="barcode"
+                                icon="magnifying-glass"
                             />
                             <flux:error name="barcodeInput" />
                         </flux:field>
@@ -81,8 +81,7 @@
                     <flux:error name="checkout" />
                     <flux:button
                         variant="primary"
-                        size="lg"
-                        class="w-full"
+                        class="w-full py-3 text-base"
                         wire:click="checkout"
                         wire:loading.attr="disabled"
                     >

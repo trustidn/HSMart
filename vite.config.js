@@ -14,14 +14,15 @@ export default defineConfig({
     ],
     server: {
         host: true,
+        origin: 'https://hsmart.test:5173',
         cors: true,
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
         hmr: {
-            host: 'localhost',
+            host: 'hsmart.test',
             port: 5173,
-            protocol: 'ws',
+            protocol: 'wss',
         },
     },
 });
