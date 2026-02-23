@@ -74,6 +74,9 @@ class ProductForm extends Component
 
     public function render()
     {
-        return view('domains.product.livewire.product-form');
+        $title = $this->productId ? __('Edit Product') : __('New Product');
+
+        return view('domains.product.livewire.product-form')
+            ->layout('layouts.app', ['title' => $title]);
     }
 }

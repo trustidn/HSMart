@@ -20,6 +20,7 @@ class TenantList extends Component
 
     public function render()
     {
-        return view('domains.tenant.livewire.admin.tenant-list');
+        return view('domains.tenant.livewire.admin.tenant-list')
+            ->layout('layouts.app', ['title' => __('Tenant Management')]);
     }
 }

@@ -52,6 +52,7 @@ class ReportDashboard extends Component
 
     public function render()
     {
-        return view('domains.reporting.livewire.report-dashboard');
+        return view('domains.reporting.livewire.report-dashboard')
+            ->layout('layouts.app', ['title' => __('Reports')]);
     }
 }

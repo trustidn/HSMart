@@ -1,6 +1,5 @@
 <div>
-    <x-layouts::app title="{{ __('Reports') }}">
-        <div class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl">
+    <div class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl">
             <flux:heading size="xl">{{ __('Reports') }}</flux:heading>
 
             <flux:card class="flex flex-wrap items-end gap-4">
@@ -153,5 +152,4 @@
                 </flux:table>
             </flux:card>
         </div>
-    </x-layouts::app>
 </div>

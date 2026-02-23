@@ -1,6 +1,5 @@
 <div>
-    <x-layouts::app title="{{ __('Tenant Management') }}">
-        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
             <flux:heading size="xl">{{ __('Tenant Management') }}</flux:heading>
             <flux:subheading>{{ __('Kelola semua tenant (Superadmin)') }}</flux:subheading>
 
@@ -37,5 +36,4 @@
                 </div>
             @endif
         </div>
-    </x-layouts::app>
 </div>

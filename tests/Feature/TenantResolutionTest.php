@@ -21,12 +21,20 @@ test('tenant context is set when user has tenant_id', function () {
         ->and(tenant()->id)->toBe($tenant->id);
 });
 
-test('user without tenant_id is redirected to admin tenants', function () {
+test('user without tenant_id can visit dashboard (admin dashboard)', function () {
     $user = User::factory()->create(['tenant_id' => null]);
     $this->actingAs($user);
 
     $response = $this->get(route('dashboard'));
-    $response->assertRedirect(route('admin.tenants'));
+    $response->assertOk();
+});
+
+test('user without tenant_id is redirected to dashboard when visiting tenant route', function () {
+    $user = User::factory()->create(['tenant_id' => null]);
+    $this->actingAs($user);
+
+    $response = $this->get(route('products.index'));
+    $response->assertRedirect(route('dashboard'));
 });
 
 test('superadmin can access admin tenants page', function () {

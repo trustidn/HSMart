@@ -34,6 +34,7 @@ class PurchaseIndex extends Component
 
     public function render()
     {
-        return view('domains.purchasing.livewire.purchase-index');
+        return view('domains.purchasing.livewire.purchase-index')
+            ->layout('layouts.app', ['title' => __('Purchases')]);
     }
 }

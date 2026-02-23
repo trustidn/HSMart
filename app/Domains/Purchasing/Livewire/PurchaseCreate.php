@@ -114,6 +114,7 @@ class PurchaseCreate extends Component
 
     public function render()
     {
-        return view('domains.purchasing.livewire.purchase-create');
+        return view('domains.purchasing.livewire.purchase-create')
+            ->layout('layouts.app', ['title' => __('New Purchase')]);
     }
 }

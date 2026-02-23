@@ -1,6 +1,5 @@
 <div>
-    <x-layouts::app title="{{ __('Purchases') }}">
-        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <flux:heading size="xl">{{ __('Purchases') }}</flux:heading>
                 <flux:button variant="primary" icon="plus" :href="route('purchasing.purchases.create')" wire:navigate>
@@ -51,5 +50,4 @@
                 </div>
             @endif
         </div>
-    </x-layouts::app>
 </div>

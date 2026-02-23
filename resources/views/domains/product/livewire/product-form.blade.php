@@ -1,6 +1,5 @@
 <div>
-    <x-layouts::app :title="$productId ? __('Edit Product') : __('New Product')">
-        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
             <div class="flex items-center gap-2">
                 <flux:link :href="route('products.index')" wire:navigate icon="arrow-left" icon-position="left">
                     {{ __('Products') }}
@@ -60,5 +59,4 @@
                 </div>
             </form>
         </div>
-    </x-layouts::app>
 </div>

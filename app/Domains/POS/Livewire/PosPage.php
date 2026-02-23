@@ -145,6 +145,7 @@ class PosPage extends Component
 
     public function render()
     {
-        return view('domains.pos.livewire.pos-page');
+        return view('domains.pos.livewire.pos-page')
+            ->layout('layouts.app', ['title' => __('Point of Sale')]);
     }
 }

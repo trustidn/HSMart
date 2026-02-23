@@ -54,6 +54,9 @@ class SupplierForm extends Component
 
     public function render()
     {
-        return view('domains.purchasing.livewire.supplier-form');
+        $title = $this->supplierId ? __('Edit Supplier') : __('New Supplier');
+
+        return view('domains.purchasing.livewire.supplier-form')
+            ->layout('layouts.app', ['title' => $title]);
     }
 }

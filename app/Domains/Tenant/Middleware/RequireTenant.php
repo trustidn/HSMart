@@ -19,10 +19,10 @@ class RequireTenant
             return $next($request);
         }
 
-        if ($request->routeIs('admin.*')) {
+        if ($request->routeIs('admin.*') || $request->routeIs('dashboard')) {
             return $next($request);
         }
 
-        return redirect()->route('admin.tenants');
+        return redirect()->route('dashboard');
     }
 }

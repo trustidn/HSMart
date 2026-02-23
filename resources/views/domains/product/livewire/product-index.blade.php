@@ -1,6 +1,5 @@
 <div>
-    <x-layouts::app title="{{ __('Products') }}">
-        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <flux:heading size="xl">{{ __('Products') }}</flux:heading>
             <flux:button variant="primary" icon="plus" :href="route('products.create')" wire:navigate>
@@ -75,5 +74,4 @@
         </div>
 
         @livewire(\App\Domains\Product\Livewire\StockAdjustment::class)
-    </x-layouts::app>
 </div>

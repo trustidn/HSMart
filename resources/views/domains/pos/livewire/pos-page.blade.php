@@ -1,6 +1,5 @@
 <div>
-    <x-layouts::app title="{{ __('POS') }}">
-        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
             <flux:heading size="xl">{{ __('Point of Sale') }}</flux:heading>
 
             <div class="grid gap-6 lg:grid-cols-3">
@@ -96,5 +95,4 @@
                 </div>
             </div>
         </div>
-    </x-layouts::app>
 </div>

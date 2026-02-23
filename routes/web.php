@@ -10,14 +10,15 @@ use App\Domains\Purchasing\Livewire\SupplierIndex;
 use App\Domains\Reporting\Livewire\ReportDashboard;
 use App\Domains\Settings\Livewire\WhiteLabelSettings;
 use App\Domains\Tenant\Livewire\Admin\TenantList;
+use App\Livewire\Dashboard;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified', 'tenant', 'require.tenant'])
+Route::livewire('dashboard', Dashboard::class)
+    ->middleware(['auth', 'verified', 'tenant'])
     ->name('dashboard');
 
 Route::view('subscription/expired', 'subscription-expired')

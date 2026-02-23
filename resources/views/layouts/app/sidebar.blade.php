@@ -11,7 +11,7 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" :href="tenant() ? route('dashboard') : route('admin.tenants')" wire:navigate />
+                <x-app-logo :sidebar="true" :href="route('dashboard')" wire:navigate />
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
@@ -42,7 +42,10 @@
                             {{ __('Store settings') }}
                         </flux:sidebar.item>
                     @else
-                        <flux:sidebar.item icon="building-office-2" :href="route('admin.tenants')" :current="request()->routeIs('admin.*')" wire:navigate>
+                        <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                            {{ __('Dashboard') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="building-office-2" :href="route('admin.tenants')" :current="request()->routeIs('admin.tenants')" wire:navigate>
                             {{ __('Tenant Management') }}
                         </flux:sidebar.item>
                     @endif

@@ -1,6 +1,5 @@
 <div>
-    <x-layouts::app title="{{ __('Store settings') }}">
-        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
             <flux:heading size="xl">{{ __('Store settings') }}</flux:heading>
             <flux:text class="text-zinc-500 dark:text-zinc-400">
                 {{ __('Customize your store name, logo, colors and receipt footer.') }}
@@ -80,5 +79,4 @@
                 </div>
             </form>
         </div>
-    </x-layouts::app>
 </div>
