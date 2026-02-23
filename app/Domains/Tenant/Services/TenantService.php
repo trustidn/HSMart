@@ -2,6 +2,7 @@
 
 namespace App\Domains\Tenant\Services;
 
+use App\Domains\Accounting\Services\JournalService;
 use App\Domains\Subscription\Services\SubscriptionService;
 use App\Domains\Tenant\Models\Tenant;
 use App\Domains\Tenant\Models\TenantSetting;
@@ -27,6 +28,7 @@ class TenantService
         ]);
 
         app(SubscriptionService::class)->startTrial($tenant);
+        app(JournalService::class)->ensureDefaultAccounts($tenant);
 
         return $tenant;
     }

@@ -71,3 +71,29 @@ test('DeductSaleStock listener decreases product stock', function () {
 
     expect($product->fresh()->stock)->toBe(7);
 });
+
+test('RecordSaleJournal creates journal with debit Kas and credit Penjualan', function () {
+    app(\App\Domains\Accounting\Services\JournalService::class)->ensureDefaultAccounts($this->tenant);
+    $product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'stock' => 10, 'sell_price' => 25000]);
+
+    $sale = app(SaleService::class)->createSale(
+        customerName: null,
+        items: [['product_id' => $product->id, 'qty' => 1, 'unit_price' => 25000]],
+        amount: 25000,
+        paymentMethod: 'cash'
+    );
+
+    $journal = \App\Domains\Accounting\Models\Journal::withoutGlobalScopes()
+        ->where('tenant_id', $this->tenant->id)
+        ->where('reference_type', Sale::class)
+        ->where('reference_id', $sale->id)
+        ->first();
+
+    expect($journal)->not->toBeNull()
+        ->and($journal->items)->toHaveCount(2);
+
+    $debits = $journal->items->where('debit', '>', 0);
+    $credits = $journal->items->where('credit', '>', 0);
+    expect($debits->sum('debit'))->toBe(25000.0)
+        ->and($credits->sum('credit'))->toBe(25000.0);
+});

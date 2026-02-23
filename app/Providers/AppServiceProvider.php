@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domains\Accounting\Listeners\RecordSaleJournal;
 use App\Domains\POS\Events\SaleCompleted;
 use App\Domains\POS\Listeners\DeductSaleStock;
 use Carbon\CarbonImmutable;
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         Event::listen(SaleCompleted::class, DeductSaleStock::class);
+        Event::listen(SaleCompleted::class, RecordSaleJournal::class);
     }
 
     /**
