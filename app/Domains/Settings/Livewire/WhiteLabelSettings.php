@@ -2,6 +2,7 @@
 
 namespace App\Domains\Settings\Livewire;
 
+use App\Domains\Tenant\Models\Tenant;
 use App\Domains\Tenant\Services\TenantService;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -25,16 +26,29 @@ class WhiteLabelSettings extends Component
 
     public string $timezone = 'Asia/Jakarta';
 
+    private function resolveTenant(): ?Tenant
+    {
+        if (tenant() !== null) {
+            return tenant();
+        }
+        $user = auth()->user();
+        if ($user?->tenant_id !== null) {
+            return Tenant::find($user->tenant_id);
+        }
+
+        return null;
+    }
+
     public function mount(): void
     {
-        $t = tenant();
+        $t = $this->resolveTenant();
         if (! $t) {
             abort(403);
         }
         $setting = app(TenantService::class)->getSetting($t);
         $this->store_name = $setting->store_name ?? $t->name;
-        $this->primary_color = $setting->primary_color;
-        $this->secondary_color = $setting->secondary_color;
+        $this->primary_color = $setting->primary_color ?? '#000000';
+        $this->secondary_color = $setting->secondary_color ?? '#666666';
         $this->receipt_footer = $setting->receipt_footer ?? '';
         $this->currency = $setting->currency ?? 'IDR';
         $this->timezone = $setting->timezone ?? 'Asia/Jakarta';
@@ -42,7 +56,7 @@ class WhiteLabelSettings extends Component
 
     public function save(): void
     {
-        $t = tenant();
+        $t = $this->resolveTenant();
         if (! $t) {
             abort(403);
         }
@@ -79,7 +93,7 @@ class WhiteLabelSettings extends Component
 
     public function removeLogo(): void
     {
-        $t = tenant();
+        $t = $this->resolveTenant();
         if (! $t || ! $t->setting?->logo_path) {
             return;
         }

@@ -64,6 +64,7 @@ class Subscription extends Model
 
     /**
      * Scope to current subscription (trial or active, and not yet ended).
+     * Uses start of today so "ends_at" on a given date is valid for the whole of that day.
      *
      * @param  Builder<Subscription>  $query
      * @return Builder<Subscription>
@@ -71,6 +72,6 @@ class Subscription extends Model
     public function scopeCurrent(Builder $query): Builder
     {
         return $query->whereIn('status', [self::STATUS_TRIAL, self::STATUS_ACTIVE])
-            ->where('ends_at', '>=', now());
+            ->where('ends_at', '>=', now()->startOfDay());
     }
 }

@@ -96,11 +96,16 @@ class SubscriptionService
 
     /**
      * Extend subscription by adding days to ends_at (superadmin).
+     * If status was expired, set to active so it counts as current.
      */
     public function extendSubscription(Subscription $subscription, int $days): Subscription
     {
         $endsAt = $subscription->ends_at->addDays($days);
-        $subscription->update(['ends_at' => $endsAt]);
+        $updates = ['ends_at' => $endsAt];
+        if ($subscription->status === Subscription::STATUS_EXPIRED) {
+            $updates['status'] = Subscription::STATUS_ACTIVE;
+        }
+        $subscription->update($updates);
 
         return $subscription->fresh();
     }

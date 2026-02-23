@@ -2,6 +2,7 @@
 
 namespace App\Domains\Purchasing\Listeners;
 
+use App\Domains\Product\Models\Product;
 use App\Domains\Purchasing\Events\PurchaseCompleted;
 use App\Services\StockService;
 
@@ -13,8 +14,12 @@ class AddPurchaseStock
 
     public function handle(PurchaseCompleted $event): void
     {
-        foreach ($event->purchase->items as $item) {
-            $this->stockService->increaseStock($item->product, $item->qty);
+        $purchase = $event->purchase;
+        foreach ($purchase->items as $item) {
+            $product = Product::withoutGlobalScopes()->find($item->product_id);
+            if ($product) {
+                $this->stockService->increaseStock($product, $item->qty);
+            }
         }
     }
 }

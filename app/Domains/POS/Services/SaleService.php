@@ -8,6 +8,7 @@ use App\Domains\POS\Models\Sale;
 use App\Domains\POS\Models\SaleItem;
 use App\Domains\Product\Models\Product;
 use App\Domains\Subscription\Services\SubscriptionService;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 
 class SaleService
@@ -19,15 +20,16 @@ class SaleService
      */
     public function createSale(?string $customerName, array $items, float $amount, string $paymentMethod = Payment::METHOD_CASH, ?string $paymentReference = null): Sale
     {
-        if (! app(SubscriptionService::class)->canCreateSale(tenant())) {
+        $tenant = $this->resolveTenant();
+        if (! app(SubscriptionService::class)->canCreateSale($tenant)) {
             throw new \DomainException(__('Subscription has expired. You cannot create new sales.'));
         }
         $this->validateStock($items);
 
-        return DB::transaction(function () use ($customerName, $items, $amount, $paymentMethod, $paymentReference) {
+        return DB::transaction(function () use ($tenant, $customerName, $items, $amount, $paymentMethod, $paymentReference) {
             $sale = Sale::create([
-                'tenant_id' => tenant()->id,
-                'sale_number' => $this->generateSaleNumber(),
+                'tenant_id' => $tenant->id,
+                'sale_number' => $this->generateSaleNumber($tenant),
                 'sale_date' => now()->toDateString(),
                 'customer_name' => $customerName,
                 'total_amount' => 0,
@@ -83,9 +85,24 @@ class SaleService
         }
     }
 
-    private function generateSaleNumber(): string
+    private function resolveTenant(): ?Tenant
     {
-        $count = Sale::where('tenant_id', tenant()->id)->count();
+        if (tenant() !== null) {
+            return tenant();
+        }
+        $user = auth()->user();
+        if ($user?->tenant_id !== null) {
+            return Tenant::find($user->tenant_id);
+        }
+
+        return null;
+    }
+
+    private function generateSaleNumber(Tenant $tenant): string
+    {
+        $count = Sale::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->count();
 
         return 'INV-'.str_pad((string) ($count + 1), 6, '0', STR_PAD_LEFT);
     }

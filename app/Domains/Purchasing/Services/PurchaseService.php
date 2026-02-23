@@ -8,6 +8,7 @@ use App\Domains\Purchasing\Models\Purchase;
 use App\Domains\Purchasing\Models\PurchaseItem;
 use App\Domains\Purchasing\Models\Supplier;
 use App\Domains\Subscription\Services\SubscriptionService;
+use App\Domains\Tenant\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseService
@@ -19,7 +20,8 @@ class PurchaseService
      */
     public function createPurchase(int $supplierId, array $items, ?\DateTimeInterface $purchaseDate = null): Purchase
     {
-        if (! app(SubscriptionService::class)->canCreatePurchase(tenant())) {
+        $tenant = $this->resolveTenant();
+        if (! app(SubscriptionService::class)->canCreatePurchase($tenant)) {
             throw new \DomainException(__('Subscription has expired. You cannot create new purchases.'));
         }
         $purchaseDate = $purchaseDate ?? now();
@@ -27,14 +29,16 @@ class PurchaseService
             ? $purchaseDate->format('Y-m-d')
             : $purchaseDate;
 
-        return DB::transaction(function () use ($supplierId, $items, $dateString) {
-            $supplier = Supplier::find($supplierId);
+        return DB::transaction(function () use ($tenant, $supplierId, $items, $dateString) {
+            $supplier = Supplier::withoutGlobalScopes()
+                ->where('tenant_id', $tenant->id)
+                ->find($supplierId);
             if (! $supplier) {
                 throw new \InvalidArgumentException(__('Supplier not found.'));
             }
 
             $purchase = Purchase::create([
-                'tenant_id' => tenant()->id,
+                'tenant_id' => $tenant->id,
                 'supplier_id' => $supplier->id,
                 'purchase_number' => $this->generatePurchaseNumber(),
                 'purchase_date' => $dateString,
@@ -44,7 +48,9 @@ class PurchaseService
 
             $total = 0.0;
             foreach ($items as $item) {
-                $product = Product::find($item['product_id']);
+                $product = Product::withoutGlobalScopes()
+                    ->where('tenant_id', $tenant->id)
+                    ->find($item['product_id']);
                 if (! $product) {
                     throw new \InvalidArgumentException("Product not found: {$item['product_id']}");
                 }
@@ -70,9 +76,28 @@ class PurchaseService
         });
     }
 
+    private function resolveTenant(): ?Tenant
+    {
+        if (tenant() !== null) {
+            return tenant();
+        }
+        $user = auth()->user();
+        if ($user?->tenant_id !== null) {
+            return Tenant::find($user->tenant_id);
+        }
+
+        return null;
+    }
+
     private function generatePurchaseNumber(): string
     {
-        $count = Purchase::where('tenant_id', tenant()->id)->count();
+        $tenant = $this->resolveTenant();
+        if (! $tenant) {
+            throw new \DomainException(__('Tenant context required.'));
+        }
+        $count = Purchase::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->count();
 
         return 'PO-'.str_pad((string) ($count + 1), 6, '0', STR_PAD_LEFT);
     }
