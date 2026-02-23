@@ -2,6 +2,11 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
+        @if(tenant()?->setting?->primary_color)
+            <style>
+                :root, .dark { --color-accent: {{ tenant()->setting->primary_color }}; --color-accent-content: {{ tenant()->setting->primary_color }}; }
+            </style>
+        @endif
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
@@ -32,6 +37,9 @@
                         </flux:sidebar.group>
                         <flux:sidebar.item icon="chart-bar" :href="route('reports')" :current="request()->routeIs('reports')" wire:navigate>
                             {{ __('Reports') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="paint-brush" :href="route('settings.white-label')" :current="request()->routeIs('settings.white-label')" wire:navigate>
+                            {{ __('Store settings') }}
                         </flux:sidebar.item>
                     @else
                         <flux:sidebar.item icon="building-office-2" :href="route('admin.tenants')" :current="request()->routeIs('admin.*')" wire:navigate>
