@@ -51,6 +51,7 @@ class DemoSeeder extends Seeder
             'password' => Hash::make(self::DEMO_PASSWORD),
             'email_verified_at' => now(),
             'tenant_id' => $tenant->id,
+            'is_tenant_owner' => true,
         ]);
     }
 

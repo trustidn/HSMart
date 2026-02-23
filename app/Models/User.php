@@ -26,6 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'tenant_id',
+        'is_tenant_owner',
     ];
 
     /**
@@ -60,7 +61,24 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_tenant_owner' => 'boolean',
         ];
+    }
+
+    /**
+     * Whether this user is the owner of their tenant (only one owner per tenant).
+     */
+    public function isTenantOwner(): bool
+    {
+        return (bool) $this->is_tenant_owner;
+    }
+
+    /**
+     * Whether this user is superadmin (no tenant).
+     */
+    public function isSuperadmin(): bool
+    {
+        return $this->tenant_id === null;
     }
 
     /**

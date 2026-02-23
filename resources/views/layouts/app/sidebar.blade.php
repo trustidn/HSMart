@@ -41,12 +41,20 @@
                         <flux:sidebar.item icon="paint-brush" :href="route('settings.white-label')" :current="request()->routeIs('settings.white-label')" wire:navigate>
                             {{ __('Store settings') }}
                         </flux:sidebar.item>
+                        @if(auth()->user()->isTenantOwner())
+                            <flux:sidebar.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>
+                                {{ __('Users') }}
+                            </flux:sidebar.item>
+                        @endif
                     @else
                         <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                             {{ __('Dashboard') }}
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="building-office-2" :href="route('admin.tenants')" :current="request()->routeIs('admin.tenants')" wire:navigate>
                             {{ __('Tenant Management') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
+                            {{ __('User Management') }}
                         </flux:sidebar.item>
                     @endif
                 </flux:sidebar.group>

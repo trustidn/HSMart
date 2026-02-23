@@ -67,4 +67,14 @@ class UserFactory extends Factory
             'tenant_id' => $tenant->id,
         ]);
     }
+
+    /**
+     * Mark the user as tenant owner.
+     */
+    public function tenantOwner(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_tenant_owner' => true,
+        ]);
+    }
 }

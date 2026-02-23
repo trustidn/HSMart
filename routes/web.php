@@ -11,6 +11,10 @@ use App\Domains\Reporting\Livewire\ReportDashboard;
 use App\Domains\Settings\Livewire\WhiteLabelSettings;
 use App\Domains\Tenant\Livewire\Admin\TenantForm;
 use App\Domains\Tenant\Livewire\Admin\TenantList;
+use App\Domains\Tenant\Livewire\Admin\UserForm;
+use App\Domains\Tenant\Livewire\Admin\UserList;
+use App\Domains\Tenant\Livewire\TenantUserForm;
+use App\Domains\Tenant\Livewire\TenantUserList;
 use App\Livewire\Dashboard;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +29,12 @@ Route::livewire('dashboard', Dashboard::class)
 Route::view('subscription/expired', 'subscription-expired')
     ->middleware(['auth', 'verified', 'tenant', 'require.tenant'])
     ->name('subscription.expired');
+
+Route::middleware(['auth', 'verified', 'tenant', 'require.tenant', 'tenant.owner'])->group(function () {
+    Route::livewire('team/users', TenantUserList::class)->name('users.index');
+    Route::livewire('team/users/create', TenantUserForm::class)->name('users.create');
+    Route::livewire('team/users/{userId}/edit', TenantUserForm::class)->name('users.edit');
+});
 
 Route::middleware(['auth', 'verified', 'tenant', 'require.tenant'])->group(function () {
     Route::livewire('products', ProductIndex::class)->name('products.index');
@@ -46,6 +56,9 @@ Route::middleware(['auth', 'verified', 'tenant', 'superadmin'])->group(function 
     Route::livewire('admin/tenants', TenantList::class)->name('admin.tenants');
     Route::livewire('admin/tenants/create', TenantForm::class)->name('admin.tenants.create');
     Route::livewire('admin/tenants/{tenantId}/edit', TenantForm::class)->name('admin.tenants.edit');
+    Route::livewire('admin/users', UserList::class)->name('admin.users');
+    Route::livewire('admin/users/create', UserForm::class)->name('admin.users.create');
+    Route::livewire('admin/users/{userId}/edit', UserForm::class)->name('admin.users.edit');
 });
 
 require __DIR__.'/settings.php';
