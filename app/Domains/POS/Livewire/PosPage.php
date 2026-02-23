@@ -5,6 +5,7 @@ namespace App\Domains\POS\Livewire;
 use App\Domains\POS\Models\Payment;
 use App\Domains\POS\Services\SaleService;
 use App\Domains\Product\Models\Product;
+use App\Domains\Tenant\Models\Tenant;
 use Livewire\Component;
 
 class PosPage extends Component
@@ -18,6 +19,55 @@ class PosPage extends Component
 
     public string $paymentMethod = Payment::METHOD_CASH;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, Product>
+     */
+    public function getProductSearchResultsProperty(): \Illuminate\Database\Eloquent\Collection
+    {
+        $query = trim($this->barcodeInput);
+        if (strlen($query) < 1) {
+            return collect();
+        }
+
+        $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            return collect();
+        }
+
+        $term = '%'.addcslashes($query, '%_').'%';
+
+        return Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('is_active', true)
+            ->where(function ($q) use ($term) {
+                $q->where('name', 'like', $term)
+                    ->orWhere('sku', 'like', $term)
+                    ->orWhere('barcode', 'like', $term);
+            })
+            ->orderBy('name')
+            ->limit(10)
+            ->get();
+    }
+
+    public function selectProduct(int $id): void
+    {
+        $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            return;
+        }
+
+        $product = Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('is_active', true)
+            ->find($id);
+
+        if ($product !== null) {
+            $this->addToCart($product, 1);
+            $this->barcodeInput = '';
+            $this->resetErrorBag('barcodeInput');
+        }
+    }
+
     public function addByBarcode(): void
     {
         $code = trim($this->barcodeInput);
@@ -25,7 +75,19 @@ class PosPage extends Component
             return;
         }
 
-        $product = Product::where('barcode', $code)->orWhere('sku', $code)->first();
+        $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            $this->addError('barcodeInput', __('Tenant not found'));
+
+            return;
+        }
+
+        $product = Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where(function ($q) use ($code) {
+                $q->where('barcode', $code)->orWhere('sku', $code);
+            })
+            ->first();
         if (! $product) {
             $this->addError('barcodeInput', __('Product not found'));
 
@@ -141,6 +203,19 @@ class PosPage extends Component
         } catch (\DomainException|\InvalidArgumentException $e) {
             $this->addError('checkout', $e->getMessage());
         }
+    }
+
+    private function resolveTenant(): ?Tenant
+    {
+        if (tenant() !== null) {
+            return tenant();
+        }
+        $user = auth()->user();
+        if ($user?->tenant_id !== null) {
+            return Tenant::find($user->tenant_id);
+        }
+
+        return null;
     }
 
     public function render()

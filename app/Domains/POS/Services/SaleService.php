@@ -21,10 +21,13 @@ class SaleService
     public function createSale(?string $customerName, array $items, float $amount, string $paymentMethod = Payment::METHOD_CASH, ?string $paymentReference = null): Sale
     {
         $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            throw new \DomainException(__('Tenant not found.'));
+        }
         if (! app(SubscriptionService::class)->canCreateSale($tenant)) {
             throw new \DomainException(__('Subscription has expired. You cannot create new sales.'));
         }
-        $this->validateStock($items);
+        $this->validateStock($tenant, $items);
 
         return DB::transaction(function () use ($tenant, $customerName, $items, $amount, $paymentMethod, $paymentReference) {
             $sale = Sale::create([
@@ -38,7 +41,10 @@ class SaleService
 
             $total = 0.0;
             foreach ($items as $item) {
-                $product = Product::find($item['product_id']);
+                $product = $this->findProductForTenant($tenant, (int) $item['product_id']);
+                if ($product === null) {
+                    throw new \InvalidArgumentException("Product not found: {$item['product_id']}");
+                }
                 $qty = (int) $item['qty'];
                 $unitPrice = (float) $item['unit_price'];
                 $subtotal = round($qty * $unitPrice, 2);
@@ -72,10 +78,10 @@ class SaleService
     /**
      * @param  array<int, array{product_id: int, qty: int}>  $items
      */
-    private function validateStock(array $items): void
+    private function validateStock(Tenant $tenant, array $items): void
     {
         foreach ($items as $item) {
-            $product = Product::find($item['product_id']);
+            $product = $this->findProductForTenant($tenant, (int) $item['product_id']);
             if (! $product) {
                 throw new \InvalidArgumentException("Product not found: {$item['product_id']}");
             }
@@ -83,6 +89,13 @@ class SaleService
                 throw new \DomainException("Insufficient stock for {$product->name}. Available: {$product->stock}, requested: {$item['qty']}");
             }
         }
+    }
+
+    private function findProductForTenant(Tenant $tenant, int $productId): ?Product
+    {
+        return Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->find($productId);
     }
 
     private function resolveTenant(): ?Tenant

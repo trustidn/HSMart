@@ -5,12 +5,33 @@
             <div class="grid gap-6 lg:grid-cols-3">
                 <div class="lg:col-span-2 space-y-4">
                     <form wire:submit="addByBarcode" class="flex gap-2">
-                        <flux:field class="flex-1">
+                        <flux:field class="relative flex-1">
                             <flux:input
-                                wire:model="barcodeInput"
+                                wire:model.live.debounce.300ms="barcodeInput"
                                 placeholder="{{ __('Scan or enter barcode / SKU') }}"
                                 icon="magnifying-glass"
+                                autocomplete="off"
                             />
+                            @if (strlen(trim($barcodeInput)) >= 1)
+                                <div
+                                    class="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-auto rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
+                                >
+                                    @forelse ($this->productSearchResults as $product)
+                                        <button
+                                            type="button"
+                                            wire:click="selectProduct({{ $product->id }})"
+                                            class="flex w-full flex-col gap-0.5 px-3 py-2 text-left text-sm transition hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                                        >
+                                            <span class="font-medium text-zinc-900 dark:text-zinc-100">{{ $product->name }}</span>
+                                            <span class="text-xs text-zinc-500 dark:text-zinc-400">{{ $product->sku }}{{ $product->barcode ? ' · ' . $product->barcode : '' }}</span>
+                                        </button>
+                                    @empty
+                                        <div class="px-3 py-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                                            {{ __('No products found. Type name or SKU.') }}
+                                        </div>
+                                    @endforelse
+                                </div>
+                            @endif
                             <flux:error name="barcodeInput" />
                         </flux:field>
                         <flux:button type="submit" variant="primary">
