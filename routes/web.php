@@ -9,6 +9,7 @@ use App\Domains\Purchasing\Livewire\SupplierForm;
 use App\Domains\Purchasing\Livewire\SupplierIndex;
 use App\Domains\Reporting\Livewire\ReportDashboard;
 use App\Domains\Settings\Livewire\WhiteLabelSettings;
+use App\Domains\Tenant\Livewire\Admin\TenantForm;
 use App\Domains\Tenant\Livewire\Admin\TenantList;
 use App\Livewire\Dashboard;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,8 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant'])->group(funct
 
 Route::middleware(['auth', 'verified', 'tenant', 'superadmin'])->group(function () {
     Route::livewire('admin/tenants', TenantList::class)->name('admin.tenants');
+    Route::livewire('admin/tenants/create', TenantForm::class)->name('admin.tenants.create');
+    Route::livewire('admin/tenants/{tenantId}/edit', TenantForm::class)->name('admin.tenants.edit');
 });
 
 require __DIR__.'/settings.php';

@@ -49,6 +49,29 @@ class TenantService
     }
 
     /**
+     * Update tenant (name, slug). Superadmin only.
+     *
+     * @param  array{name?: string, slug?: string}  $data
+     */
+    public function update(Tenant $tenant, array $data): Tenant
+    {
+        if (isset($data['slug'])) {
+            $data['slug'] = $this->ensureUniqueSlugExcept($data['slug'], $tenant->id);
+        }
+        $tenant->update($data);
+
+        return $tenant->fresh();
+    }
+
+    /**
+     * Delete tenant. Users belonging to this tenant will have tenant_id set to null (nullOnDelete).
+     */
+    public function delete(Tenant $tenant): void
+    {
+        $tenant->delete();
+    }
+
+    /**
      * Get or create setting for tenant.
      */
     public function getSetting(Tenant $tenant): TenantSetting
@@ -62,11 +85,24 @@ class TenantService
 
     private function ensureUniqueSlug(string $slug): string
     {
+        return $this->ensureUniqueSlugExcept($slug, null);
+    }
+
+    private function ensureUniqueSlugExcept(string $slug, ?int $exceptTenantId): string
+    {
         $base = $slug;
         $counter = 0;
-        while (Tenant::where('slug', $slug)->exists()) {
+        $query = Tenant::where('slug', $slug);
+        if ($exceptTenantId !== null) {
+            $query->where('id', '!=', $exceptTenantId);
+        }
+        while ($query->exists()) {
             $counter++;
             $slug = $base.'-'.$counter;
+            $query = Tenant::where('slug', $slug);
+            if ($exceptTenantId !== null) {
+                $query->where('id', '!=', $exceptTenantId);
+            }
         }
 
         return $slug;

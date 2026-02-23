@@ -71,4 +71,37 @@ class SubscriptionService
 
         return $tenant->subscriptions()->current()->first();
     }
+
+    /**
+     * Add a new subscription for tenant (superadmin). Started at now, ends at now + duration_days.
+     *
+     * @param  array{status?: string, duration_days: int, price?: float|null}  $options
+     */
+    public function addSubscription(Tenant $tenant, int $durationDays, array $options = []): Subscription
+    {
+        $startedAt = CarbonImmutable::now();
+        $endsAt = $startedAt->addDays($durationDays);
+        $status = $options['status'] ?? self::STATUS_ACTIVE;
+        $price = $options['price'] ?? null;
+
+        return Subscription::create([
+            'tenant_id' => $tenant->id,
+            'started_at' => $startedAt,
+            'ends_at' => $endsAt,
+            'status' => $status,
+            'price' => $price,
+            'duration_days' => $durationDays,
+        ]);
+    }
+
+    /**
+     * Extend subscription by adding days to ends_at (superadmin).
+     */
+    public function extendSubscription(Subscription $subscription, int $days): Subscription
+    {
+        $endsAt = $subscription->ends_at->addDays($days);
+        $subscription->update(['ends_at' => $endsAt]);
+
+        return $subscription->fresh();
+    }
 }
