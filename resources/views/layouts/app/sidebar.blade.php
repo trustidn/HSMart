@@ -120,6 +120,15 @@
             </flux:dropdown>
         </flux:header>
 
+        @if(tenant() && !app(\App\Domains\Subscription\Services\SubscriptionService::class)->isActive(tenant()))
+            <div class="sticky top-0 z-10 mx-4 mt-4">
+                <flux:callout variant="warning" icon="exclamation-triangle">
+                    {{ __('Your subscription has expired. You can view data but cannot create new sales or purchases.') }}
+                    <flux:link :href="route('subscription.expired')" wire:navigate class="font-medium">{{ __('Details') }}</flux:link>
+                </flux:callout>
+            </div>
+        @endif
+
         {{ $slot }}
 
         @fluxScripts

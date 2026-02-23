@@ -39,6 +39,22 @@ test('SaleService creates sale with items and payment and dispatches SaleComplet
     Event::assertDispatched(\App\Domains\POS\Events\SaleCompleted::class);
 });
 
+test('SaleService throws when subscription expired', function () {
+    $tenant = Tenant::factory()->create();
+    $tenant->setting()->create(['store_name' => $tenant->name, 'currency' => 'IDR', 'timezone' => 'Asia/Jakarta']);
+    Subscription::factory()->expired()->create(['tenant_id' => $tenant->id]);
+    app()->instance('tenant', $tenant);
+    $product = Product::factory()->create(['tenant_id' => $tenant->id, 'stock' => 10, 'sell_price' => 10000]);
+    $service = app(SaleService::class);
+
+    $service->createSale(
+        customerName: null,
+        items: [['product_id' => $product->id, 'qty' => 1, 'unit_price' => 10000]],
+        amount: 10000,
+        paymentMethod: 'cash'
+    );
+})->throws(\DomainException::class);
+
 test('SaleService throws when stock insufficient', function () {
     $product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'stock' => 2, 'sell_price' => 10000]);
     $service = app(SaleService::class);

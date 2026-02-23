@@ -93,6 +93,21 @@ test('RecordPurchaseJournal creates journal with debit Persediaan and credit Hut
         ->and($credits->sum('credit'))->toBe(30000.0);
 });
 
+test('PurchaseService throws when subscription expired', function () {
+    $tenant = Tenant::factory()->create();
+    $tenant->setting()->create(['store_name' => $tenant->name, 'currency' => 'IDR', 'timezone' => 'Asia/Jakarta']);
+    Subscription::factory()->expired()->create(['tenant_id' => $tenant->id]);
+    app()->instance('tenant', $tenant);
+    $supplier = Supplier::factory()->create(['tenant_id' => $tenant->id]);
+    $product = Product::factory()->create(['tenant_id' => $tenant->id]);
+    $service = app(PurchaseService::class);
+
+    $service->createPurchase(
+        $supplier->id,
+        [['product_id' => $product->id, 'qty' => 1, 'unit_cost' => 1000]]
+    );
+})->throws(\DomainException::class);
+
 test('PurchaseService throws when supplier not found', function () {
     $product = Product::factory()->create(['tenant_id' => $this->tenant->id]);
     $service = app(PurchaseService::class);

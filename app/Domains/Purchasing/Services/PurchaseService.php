@@ -7,6 +7,7 @@ use App\Domains\Purchasing\Events\PurchaseCompleted;
 use App\Domains\Purchasing\Models\Purchase;
 use App\Domains\Purchasing\Models\PurchaseItem;
 use App\Domains\Purchasing\Models\Supplier;
+use App\Domains\Subscription\Services\SubscriptionService;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseService
@@ -18,6 +19,9 @@ class PurchaseService
      */
     public function createPurchase(int $supplierId, array $items, ?\DateTimeInterface $purchaseDate = null): Purchase
     {
+        if (! app(SubscriptionService::class)->canCreatePurchase(tenant())) {
+            throw new \DomainException(__('Subscription has expired. You cannot create new purchases.'));
+        }
         $purchaseDate = $purchaseDate ?? now();
         $dateString = $purchaseDate instanceof \DateTimeInterface
             ? $purchaseDate->format('Y-m-d')

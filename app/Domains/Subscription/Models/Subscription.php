@@ -63,14 +63,14 @@ class Subscription extends Model
     }
 
     /**
-     * Scope to current active subscription (active status and not expired).
+     * Scope to current subscription (trial or active, and not yet ended).
      *
      * @param  Builder<Subscription>  $query
      * @return Builder<Subscription>
      */
     public function scopeCurrent(Builder $query): Builder
     {
-        return $query->where('status', self::STATUS_ACTIVE)
+        return $query->whereIn('status', [self::STATUS_TRIAL, self::STATUS_ACTIVE])
             ->where('ends_at', '>=', now());
     }
 }

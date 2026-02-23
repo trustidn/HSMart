@@ -7,6 +7,7 @@ use App\Domains\POS\Models\Payment;
 use App\Domains\POS\Models\Sale;
 use App\Domains\POS\Models\SaleItem;
 use App\Domains\Product\Models\Product;
+use App\Domains\Subscription\Services\SubscriptionService;
 use Illuminate\Support\Facades\DB;
 
 class SaleService
@@ -18,6 +19,9 @@ class SaleService
      */
     public function createSale(?string $customerName, array $items, float $amount, string $paymentMethod = Payment::METHOD_CASH, ?string $paymentReference = null): Sale
     {
+        if (! app(SubscriptionService::class)->canCreateSale(tenant())) {
+            throw new \DomainException(__('Subscription has expired. You cannot create new sales.'));
+        }
         $this->validateStock($items);
 
         return DB::transaction(function () use ($customerName, $items, $amount, $paymentMethod, $paymentReference) {

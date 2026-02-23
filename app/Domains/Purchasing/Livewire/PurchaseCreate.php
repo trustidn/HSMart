@@ -107,7 +107,7 @@ class PurchaseCreate extends Component
             $service->createPurchase($this->supplierId, $itemPayload, $purchaseDate);
             session()->flash('message', __('Purchase created successfully.'));
             $this->redirectRoute('purchasing.purchases.index', navigate: true);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\DomainException|\InvalidArgumentException $e) {
             $this->addError('items', $e->getMessage());
         }
     }
