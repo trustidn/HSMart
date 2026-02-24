@@ -4,6 +4,7 @@ namespace App\Domains\Tenant\Livewire;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Domains\Tenant\Models\Tenant;
 use App\Domains\User\Services\UserService;
 use App\Models\User;
 use Livewire\Component;
@@ -15,6 +16,8 @@ class TenantUserForm extends Component
 
     public ?int $userId = null;
 
+    public ?int $tenant_id = null;
+
     public string $name = '';
 
     public string $email = '';
@@ -25,7 +28,10 @@ class TenantUserForm extends Component
 
     public function mount(?int $userId = null): void
     {
+        $this->tenant_id = tenant()?->id;
+
         if ($userId !== null) {
+            $this->ensureTenant();
             $user = User::where('tenant_id', tenant()->id)->find($userId);
             if (! $user) {
                 abort(404);
@@ -39,8 +45,23 @@ class TenantUserForm extends Component
         }
     }
 
+    protected function ensureTenant(): void
+    {
+        if (function_exists('tenant') && tenant() !== null) {
+            return;
+        }
+        if ($this->tenant_id !== null) {
+            $tenant = Tenant::find($this->tenant_id);
+            if ($tenant !== null) {
+                app()->instance('tenant', $tenant);
+            }
+        }
+    }
+
     public function save(): void
     {
+        $this->ensureTenant();
+
         if ($this->userId !== null) {
             $this->validate([
                 'name' => $this->nameRules(),
@@ -63,6 +84,9 @@ class TenantUserForm extends Component
                 return;
             }
         } else {
+            if (tenant() === null) {
+                abort(403, __('Tenant context required.'));
+            }
             $this->validate([
                 'name' => $this->nameRules(),
                 'email' => $this->emailRules(),

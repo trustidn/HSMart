@@ -34,12 +34,11 @@
                 <flux:input type="password" wire:model="password" autocomplete="new-password" />
                 <flux:error name="password" />
             </flux:field>
-            @if(!$userId)
-                <flux:field>
-                    <flux:label>{{ __('Confirm password') }}</flux:label>
-                    <flux:input type="password" wire:model="password_confirmation" autocomplete="new-password" />
-                </flux:field>
-            @endif
+            <flux:field>
+                <flux:label>{{ __('Confirm password') }}</flux:label>
+                <flux:input type="password" wire:model="password_confirmation" autocomplete="new-password" />
+                <flux:error name="password_confirmation" />
+            </flux:field>
             <div class="flex gap-3">
                 <flux:button type="submit" variant="primary">{{ __('Save') }}</flux:button>
                 <flux:button type="button" variant="ghost" :href="route('users.index')" wire:navigate>
