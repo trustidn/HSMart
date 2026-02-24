@@ -17,11 +17,14 @@ test('authenticated users with tenant and active subscription can visit the dash
         'timezone' => 'Asia/Jakarta',
     ]);
     Subscription::factory()->active()->create(['tenant_id' => $tenant->id]);
-    $user = User::factory()->forTenant($tenant)->create();
+    $user = User::factory()->forTenant($tenant)->create(['name' => 'John Doe']);
     $this->actingAs($user);
 
     $response = $this->get(route('dashboard'));
     $response->assertOk();
+    $response->assertSee('John');
+    $response->assertSee('Total products');
+    $response->assertSee('Recent transactions');
 });
 
 test('authenticated users without tenant (superadmin) can visit the dashboard', function () {
