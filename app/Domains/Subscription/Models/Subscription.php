@@ -24,6 +24,8 @@ class Subscription extends Model
 
     public const STATUS_EXPIRED = 'expired';
 
+    public const STATUS_PENDING = 'pending';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,12 +33,21 @@ class Subscription extends Model
      */
     protected $fillable = [
         'tenant_id',
+        'subscription_plan_id',
         'started_at',
         'ends_at',
         'status',
         'price',
         'duration_days',
     ];
+
+    /**
+     * @return BelongsTo<SubscriptionPlan, $this>
+     */
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
+    }
 
     /**
      * The attributes that should be cast.

@@ -11,7 +11,8 @@ class TenantSubscriptionManager extends Component
 {
     public int $tenantId;
 
-    public int $duration_days = 30;
+    /** @var int|null Selected plan ID when adding subscription */
+    public ?int $selected_plan_id = null;
 
     public string $status = Subscription::STATUS_ACTIVE;
 
@@ -28,17 +29,34 @@ class TenantSubscriptionManager extends Component
         $this->tenantId = $tenantId;
     }
 
+    public function getPlansProperty()
+    {
+        return app(SubscriptionService::class)->getActivePlans();
+    }
+
     public function addSubscription(): void
     {
         $this->validate([
-            'duration_days' => ['required', 'integer', 'min:1', 'max:3650'],
+            'selected_plan_id' => ['required', 'exists:subscription_plans,id'],
             'status' => ['required', 'in:'.Subscription::STATUS_TRIAL.','.Subscription::STATUS_ACTIVE],
         ]);
         $tenant = Tenant::findOrFail($this->tenantId);
-        app(SubscriptionService::class)->addSubscription($tenant, $this->duration_days, [
+        app(SubscriptionService::class)->addSubscriptionByPlan($tenant, (int) $this->selected_plan_id, [
             'status' => $this->status,
         ]);
         session()->flash('subscription_message', __('Subscription added.'));
+        $this->selected_plan_id = null;
+        $this->redirectRoute('admin.tenants.edit', ['tenantId' => $this->tenantId], navigate: true);
+    }
+
+    public function approveSubscription(int $subscriptionId): void
+    {
+        $subscription = Subscription::findOrFail($subscriptionId);
+        if ($subscription->tenant_id !== $this->tenantId) {
+            abort(403);
+        }
+        app(SubscriptionService::class)->approveSubscription($subscription);
+        session()->flash('subscription_message', __('Subscription approved and activated.'));
         $this->redirectRoute('admin.tenants.edit', ['tenantId' => $this->tenantId], navigate: true);
     }
 
@@ -77,7 +95,8 @@ class TenantSubscriptionManager extends Component
     public function getSubscriptionsProperty()
     {
         return Subscription::where('tenant_id', $this->tenantId)
-            ->orderByDesc('ends_at')
+            ->with('plan')
+            ->orderByDesc('created_at')
             ->get();
     }
 

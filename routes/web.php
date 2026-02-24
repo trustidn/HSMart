@@ -9,6 +9,9 @@ use App\Domains\Purchasing\Livewire\SupplierForm;
 use App\Domains\Purchasing\Livewire\SupplierIndex;
 use App\Domains\Reporting\Livewire\ReportDashboard;
 use App\Domains\Settings\Livewire\WhiteLabelSettings;
+use App\Domains\Subscription\Livewire\Admin\PlanForm;
+use App\Domains\Subscription\Livewire\Admin\PlanIndex;
+use App\Domains\Subscription\Livewire\SubscriptionPage;
 use App\Domains\Tenant\Livewire\Admin\TenantForm;
 use App\Domains\Tenant\Livewire\Admin\TenantList;
 use App\Domains\Tenant\Livewire\Admin\UserForm;
@@ -37,6 +40,7 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant', 'tenant.owner
 });
 
 Route::middleware(['auth', 'verified', 'tenant', 'require.tenant'])->group(function () {
+    Route::livewire('subscription', SubscriptionPage::class)->name('subscription.index');
     Route::livewire('products', ProductIndex::class)->name('products.index');
     Route::livewire('products/create', ProductForm::class)->name('products.create');
     Route::livewire('products/{productId}/edit', ProductForm::class)->name('products.edit');
@@ -53,6 +57,9 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant'])->group(funct
 });
 
 Route::middleware(['auth', 'verified', 'tenant', 'superadmin'])->group(function () {
+    Route::livewire('admin/plans', PlanIndex::class)->name('admin.plans');
+    Route::livewire('admin/plans/create', PlanForm::class)->name('admin.plans.create');
+    Route::livewire('admin/plans/{planId}/edit', PlanForm::class)->name('admin.plans.edit');
     Route::livewire('admin/tenants', TenantList::class)->name('admin.tenants');
     Route::livewire('admin/tenants/create', TenantForm::class)->name('admin.tenants.create');
     Route::livewire('admin/tenants/{tenantId}/edit', TenantForm::class)->name('admin.tenants.edit');
