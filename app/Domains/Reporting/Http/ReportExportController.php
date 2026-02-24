@@ -25,6 +25,7 @@ class ReportExportController
 
         $pdf = Pdf::loadView('domains.reporting.export.sales-pdf', [
             'title' => __('Sales report'),
+            'tenantName' => tenant()?->name ?? '',
             'dateFrom' => $from,
             'dateTo' => $to,
             'total' => $summary['total'],
@@ -47,21 +48,28 @@ class ReportExportController
 
         $filename = 'sales-report-'.Carbon::parse($from)->format('Y-m-d').'-'.Carbon::parse($to)->format('Y-m-d').'.csv';
 
-        return response()->streamDownload(function () use ($summary, $sales) {
+        $tenantName = tenant()?->name ?? '';
+
+        return response()->streamDownload(function () use ($tenantName, $summary, $sales) {
             $out = fopen('php://output', 'w');
-            fputcsv($out, [__('Sales report')]);
-            fputcsv($out, [__('Period'), $summary['from'].' – '.$summary['to']]);
-            fputcsv($out, [__('Total'), (string) $summary['total'], __('transactions'), (string) $summary['count']]);
-            fputcsv($out, []); // blank
-            fputcsv($out, [__('Invoice'), __('Date'), __('Customer'), __('Total')]);
+            $delim = ';';
+            fwrite($out, "\xEF\xBB\xBF"); // UTF-8 BOM for Excel
+            fputcsv($out, [__('Sales report')], $delim);
+            fputcsv($out, [__('Tenant'), $tenantName], $delim);
+            fputcsv($out, [__('Period'), $summary['from'].' – '.$summary['to']], $delim);
+            fputcsv($out, [__('Total'), (string) $summary['total'], __('transactions'), (string) $summary['count']], $delim);
+            fputcsv($out, [], $delim);
+            fputcsv($out, [__('Invoice'), __('Date'), __('Customer'), __('Total')], $delim);
             foreach ($sales as $sale) {
                 fputcsv($out, [
                     $sale->sale_number,
                     $sale->sale_date?->format('Y-m-d') ?? '',
                     $sale->customer_name ?? '',
                     (string) $sale->total_amount,
-                ]);
+                ], $delim);
             }
+            fputcsv($out, [], $delim);
+            fputcsv($out, [__('Total'), '', '', (string) $summary['total']], $delim);
             fclose($out);
         }, $filename, [
             'Content-Type' => 'text/csv; charset=UTF-8',
@@ -78,6 +86,7 @@ class ReportExportController
 
         $pdf = Pdf::loadView('domains.reporting.export.top-products-pdf', [
             'title' => __('Top products'),
+            'tenantName' => tenant()?->name ?? '',
             'dateFrom' => $from,
             'dateTo' => $to,
             'rows' => $rows,
@@ -97,19 +106,24 @@ class ReportExportController
 
         $filename = 'top-products-'.Carbon::parse($from)->format('Y-m-d').'-'.Carbon::parse($to)->format('Y-m-d').'.csv';
 
-        return response()->streamDownload(function () use ($from, $to, $rows) {
+        $tenantName = tenant()?->name ?? '';
+
+        return response()->streamDownload(function () use ($tenantName, $from, $to, $rows) {
             $out = fopen('php://output', 'w');
-            fputcsv($out, [__('Top products')]);
-            fputcsv($out, [__('Period'), $from.' – '.$to]);
-            fputcsv($out, []); // blank
-            fputcsv($out, [__('Product'), __('SKU'), __('Qty sold'), __('Revenue')]);
+            $delim = ';';
+            fwrite($out, "\xEF\xBB\xBF");
+            fputcsv($out, [__('Top products')], $delim);
+            fputcsv($out, [__('Tenant'), $tenantName], $delim);
+            fputcsv($out, [__('Period'), $from.' – '.$to], $delim);
+            fputcsv($out, [], $delim);
+            fputcsv($out, [__('Product'), __('SKU'), __('Qty sold'), __('Revenue')], $delim);
             foreach ($rows as $row) {
                 fputcsv($out, [
                     $row->product_name ?? '',
                     $row->product_sku ?? '',
                     (string) ($row->total_qty ?? 0),
                     (string) ($row->total_revenue ?? 0),
-                ]);
+                ], $delim);
             }
             fclose($out);
         }, $filename, [
@@ -125,6 +139,7 @@ class ReportExportController
 
         $pdf = Pdf::loadView('domains.reporting.export.stock-pdf', [
             'title' => __('Stock report'),
+            'tenantName' => tenant()?->name ?? '',
             'dateLabel' => now()->format('d/m/Y'),
             'lowStockOnly' => $lowStockOnly,
             'products' => $products,
@@ -142,12 +157,17 @@ class ReportExportController
 
         $filename = 'stock-report-'.now()->format('Y-m-d').'.csv';
 
-        return response()->streamDownload(function () use ($products) {
+        $tenantName = tenant()?->name ?? '';
+
+        return response()->streamDownload(function () use ($tenantName, $products) {
             $out = fopen('php://output', 'w');
-            fputcsv($out, [__('Stock report')]);
-            fputcsv($out, [__('Date'), now()->format('Y-m-d')]);
-            fputcsv($out, []); // blank
-            fputcsv($out, [__('SKU'), __('Name'), __('Stock'), __('Min. stock'), __('Status')]);
+            $delim = ';';
+            fwrite($out, "\xEF\xBB\xBF");
+            fputcsv($out, [__('Stock report')], $delim);
+            fputcsv($out, [__('Tenant'), $tenantName], $delim);
+            fputcsv($out, [__('Date'), now()->format('Y-m-d')], $delim);
+            fputcsv($out, [], $delim);
+            fputcsv($out, [__('SKU'), __('Name'), __('Stock'), __('Min. stock'), __('Status')], $delim);
             foreach ($products as $p) {
                 fputcsv($out, [
                     $p->sku,
@@ -155,7 +175,7 @@ class ReportExportController
                     (string) $p->stock,
                     (string) $p->minimum_stock,
                     $p->isLowStock() ? __('Low stock') : __('OK'),
-                ]);
+                ], $delim);
             }
             fclose($out);
         }, $filename, [

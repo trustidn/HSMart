@@ -118,6 +118,9 @@
                         @endforelse
                     </flux:table.rows>
                 </flux:table>
+                <div class="mt-3 flex justify-end border-t border-zinc-200 pt-2 dark:border-zinc-700">
+                    <flux:text class="font-semibold">{{ __('Total') }}: {{ number_format($this->ringkasanOmzet['total'], 0, ',', '.') }}</flux:text>
+                </div>
                 @if ($this->laporanPenjualan->hasPages())
                     <div class="mt-4">
                         {{ $this->laporanPenjualan->links() }}

@@ -16,6 +16,9 @@
 </head>
 <body>
     <h1>{{ $title }}</h1>
+    @if(!empty($tenantName))
+        <p class="meta">{{ __('Tenant') }}: {{ $tenantName }}</p>
+    @endif
     <p class="meta">{{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}</p>
     <p class="total">{{ __('Total') }}: {{ number_format($total, 0, ',', '.') }} ({{ $count }} {{ __('transactions') }})</p>
     <table>
@@ -41,6 +44,12 @@
                 </tr>
             @endforelse
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold;">{{ __('Total') }}</td>
+                <td class="num" style="font-weight: bold;">{{ number_format($total, 0, ',', '.') }}</td>
+            </tr>
+        </tfoot>
     </table>
 </body>
 </html>

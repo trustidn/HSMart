@@ -15,6 +15,9 @@
 </head>
 <body>
     <h1>{{ $title }}</h1>
+    @if(!empty($tenantName))
+        <p class="meta">{{ __('Tenant') }}: {{ $tenantName }}</p>
+    @endif
     <p class="meta">{{ __('As of') }} {{ $dateLabel }}@if($lowStockOnly) ({{ __('Low stock only') }})@endif</p>
     <table>
         <thead>

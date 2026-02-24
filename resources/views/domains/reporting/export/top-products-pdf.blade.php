@@ -15,6 +15,9 @@
 </head>
 <body>
     <h1>{{ $title }}</h1>
+    @if(!empty($tenantName))
+        <p class="meta">{{ __('Tenant') }}: {{ $tenantName }}</p>
+    @endif
     <p class="meta">{{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}</p>
     <table>
         <thead>
