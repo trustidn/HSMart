@@ -4,13 +4,18 @@
 
             <div class="grid gap-6 lg:grid-cols-3">
                 <div class="lg:col-span-2 space-y-4">
-                    <form wire:submit="addByBarcode" class="flex gap-2">
+                    <form wire:submit="addByBarcode" class="flex gap-2"
+                          x-data="{}"
+                          @focus-pos-barcode.window="document.getElementById('pos-barcode-input')?.focus()"
+                    >
                         <flux:field class="relative flex-1">
                             <flux:input
+                                id="pos-barcode-input"
                                 wire:model.live.debounce.300ms="barcodeInput"
                                 placeholder="{{ __('Scan or enter barcode / SKU') }}"
                                 icon="magnifying-glass"
                                 autocomplete="off"
+                                autofocus
                             />
                             @if (strlen(trim($barcodeInput)) >= 1)
                                 <div

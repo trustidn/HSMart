@@ -2,8 +2,8 @@
 
 namespace App\Domains\Product\Livewire;
 
-use App\Domains\Product\Models\Product;
 use App\Domains\Product\Services\ProductService;
+use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 
 class ProductForm extends Component
@@ -26,8 +26,9 @@ class ProductForm extends Component
 
     public function mount(?int $productId = null): void
     {
-        if ($productId !== null) {
-            $product = app(ProductService::class)->find($productId);
+        $id = $productId ?? Route::current()?->parameter('productId');
+        if ($id !== null) {
+            $product = app(ProductService::class)->find((int) $id);
             if ($product === null) {
                 abort(404);
             }
@@ -60,7 +61,12 @@ class ProductForm extends Component
 
         try {
             if ($this->productId !== null) {
-                $product = Product::findOrFail($this->productId);
+                $product = $service->find($this->productId);
+                if ($product === null) {
+                    $this->addError('sku', __('Product not found. It may have been deleted or you do not have access.'));
+
+                    return;
+                }
                 $service->update($product, $validated);
                 $this->redirectRoute('products.index', navigate: true);
             } else {

@@ -49,6 +49,38 @@ class PosPage extends Component
             ->get();
     }
 
+    /**
+     * When barcode/SKU input changes: if it exactly matches one product's barcode or SKU, add to cart automatically.
+     * Name search (partial match) keeps showing the dropdown and does not auto-add.
+     */
+    public function updatedBarcodeInput(): void
+    {
+        $code = trim($this->barcodeInput);
+        if ($code === '') {
+            return;
+        }
+
+        $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            return;
+        }
+
+        $product = Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('is_active', true)
+            ->where(function ($q) use ($code) {
+                $q->where('barcode', $code)->orWhere('sku', $code);
+            })
+            ->first();
+
+        if ($product !== null) {
+            $this->addToCart($product, 1);
+            $this->barcodeInput = '';
+            $this->resetErrorBag('barcodeInput');
+            $this->dispatch('focus-pos-barcode');
+        }
+    }
+
     public function selectProduct(int $id): void
     {
         $tenant = $this->resolveTenant();
@@ -65,6 +97,7 @@ class PosPage extends Component
             $this->addToCart($product, 1);
             $this->barcodeInput = '';
             $this->resetErrorBag('barcodeInput');
+            $this->dispatch('focus-pos-barcode');
         }
     }
 
@@ -102,6 +135,7 @@ class PosPage extends Component
         $this->addToCart($product, 1);
         $this->barcodeInput = '';
         $this->resetErrorBag('barcodeInput');
+        $this->dispatch('focus-pos-barcode');
     }
 
     public function addToCart(Product $product, int $qty = 1): void
@@ -200,6 +234,7 @@ class PosPage extends Component
             $this->customerName = '';
             session()->flash('sale-completed', true);
             $this->dispatch('sale-completed');
+            $this->dispatch('focus-pos-barcode');
         } catch (\DomainException|\InvalidArgumentException $e) {
             $this->addError('checkout', $e->getMessage());
         }

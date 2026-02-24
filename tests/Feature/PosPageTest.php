@@ -58,3 +58,26 @@ test('selecting product from dropdown adds to cart', function () {
         ->assertSet('cart.0.unit_price', 5000.0)
         ->assertSet('barcodeInput', '');
 });
+
+test('exact barcode or sku input auto-adds product to cart', function () {
+    $product = Product::factory()->create([
+        'tenant_id' => $this->tenant->id,
+        'name' => 'Snack A',
+        'sku' => 'SK-999',
+        'barcode' => '8901234567890',
+        'sell_price' => 3000,
+        'is_active' => true,
+    ]);
+
+    Livewire::test(PosPage::class)
+        ->set('barcodeInput', 'SK-999')
+        ->assertSet('cart.0.sku', 'SK-999')
+        ->assertSet('cart.0.qty', 1)
+        ->assertSet('barcodeInput', '');
+
+    Livewire::test(PosPage::class)
+        ->set('barcodeInput', '8901234567890')
+        ->assertSet('cart.0.sku', 'SK-999')
+        ->assertSet('cart.0.qty', 1)
+        ->assertSet('barcodeInput', '');
+});

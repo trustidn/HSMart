@@ -3,12 +3,26 @@
 namespace App\Domains\Product\Services;
 
 use App\Domains\Product\Models\Product;
+use App\Domains\Tenant\Models\Tenant;
 use App\Services\StockService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
 {
+    private function resolveTenant(): ?Tenant
+    {
+        if (tenant() instanceof Tenant) {
+            return tenant();
+        }
+        $user = auth()->user();
+        if ($user?->tenant_id !== null) {
+            return Tenant::find($user->tenant_id);
+        }
+
+        return null;
+    }
+
     public function __construct(
         protected StockService $stockService
     ) {}
@@ -35,8 +49,13 @@ class ProductService
         $this->validateSkuUniqueness($data['sku'] ?? '', null);
         $this->validateBarcodeUniqueness($data['barcode'] ?? null, null);
 
-        return DB::transaction(function () use ($data) {
-            $data['tenant_id'] = tenant()->id;
+        $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            throw new \RuntimeException('Tenant context required to create product.');
+        }
+
+        return DB::transaction(function () use ($data, $tenant) {
+            $data['tenant_id'] = $tenant->id;
 
             return Product::create($data);
         });
@@ -66,11 +85,18 @@ class ProductService
     }
 
     /**
-     * Find product by ID (scoped to tenant).
+     * Find product by ID (scoped to tenant). Resolves tenant from auth when tenant() is null (e.g. Livewire context).
      */
     public function find(int $id): ?Product
     {
-        return Product::find($id);
+        $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            return null;
+        }
+
+        return Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->find($id);
     }
 
     /**
