@@ -37,18 +37,11 @@
                     <flux:error name="barcode" />
                 </flux:field>
 
-                <div class="grid gap-6 sm:grid-cols-2">
-                    <flux:field>
-                        <flux:label>{{ __('Cost Price') }}</flux:label>
-                        <flux:input type="number" wire:model="cost_price" min="0" step="0.01" required />
-                        <flux:error name="cost_price" />
-                    </flux:field>
-                    <flux:field>
-                        <flux:label>{{ __('Sell Price') }}</flux:label>
-                        <flux:input type="number" wire:model="sell_price" min="0" step="0.01" required />
-                        <flux:error name="sell_price" />
-                    </flux:field>
-                </div>
+                <flux:field>
+                    <flux:label>{{ __('Sell Price') }}</flux:label>
+                    <flux:input type="number" wire:model="sell_price" min="0" step="0.01" required />
+                    <flux:error name="sell_price" />
+                </flux:field>
 
                 <flux:field>
                     <flux:label>{{ __('Minimum Stock') }}</flux:label>

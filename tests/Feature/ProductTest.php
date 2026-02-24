@@ -33,7 +33,6 @@ test('can create product', function () {
     Livewire::test(\App\Domains\Product\Livewire\ProductForm::class)
         ->set('sku', 'SKU-001')
         ->set('name', 'Test Product')
-        ->set('cost_price', '10000')
         ->set('sell_price', '15000')
         ->set('minimum_stock', '5')
         ->call('save')
@@ -52,7 +51,6 @@ test('cannot create product with duplicate sku', function () {
     Livewire::test(\App\Domains\Product\Livewire\ProductForm::class)
         ->set('sku', 'DUP-001')
         ->set('name', 'Another')
-        ->set('cost_price', '1')
         ->set('sell_price', '2')
         ->call('save')
         ->assertHasErrors('sku');

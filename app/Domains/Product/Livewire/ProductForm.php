@@ -20,8 +20,6 @@ class ProductForm extends Component
 
     public string $name = '';
 
-    public string $cost_price = '0';
-
     public string $sell_price = '0';
 
     public string $minimum_stock = '0';
@@ -43,7 +41,6 @@ class ProductForm extends Component
             $this->sku = $product->sku;
             $this->barcode = $product->barcode ?? '';
             $this->name = $product->name;
-            $this->cost_price = (string) $product->cost_price;
             $this->sell_price = (string) $product->sell_price;
             $this->minimum_stock = (string) $product->minimum_stock;
             $this->is_active = $product->is_active;
@@ -56,7 +53,6 @@ class ProductForm extends Component
             'sku' => ['required', 'string', 'max:255'],
             'barcode' => ['nullable', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'cost_price' => ['required', 'numeric', 'min:0'],
             'sell_price' => ['required', 'numeric', 'min:0'],
             'minimum_stock' => ['required', 'integer', 'min:0'],
             'is_active' => ['boolean'],
