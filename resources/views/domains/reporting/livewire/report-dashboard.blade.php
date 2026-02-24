@@ -3,14 +3,50 @@
             <flux:heading size="xl">{{ __('Reports') }}</flux:heading>
 
             <flux:card class="flex flex-wrap items-end gap-4">
-                <flux:field>
-                    <flux:label>{{ __('From') }}</flux:label>
-                    <flux:input type="date" wire:model.live="date_from" />
-                </flux:field>
-                <flux:field>
-                    <flux:label>{{ __('To') }}</flux:label>
-                    <flux:input type="date" wire:model.live="date_to" />
-                </flux:field>
+                <div class="flex flex-wrap items-center gap-2">
+                    <flux:button
+                        size="sm"
+                        :variant="$date_preset === 'today' ? 'primary' : 'ghost'"
+                        wire:click="applyPreset('today')"
+                    >
+                        {{ __('Today') }}
+                    </flux:button>
+                    <flux:button
+                        size="sm"
+                        :variant="$date_preset === 'week' ? 'primary' : 'ghost'"
+                        wire:click="applyPreset('week')"
+                    >
+                        {{ __('This week') }}
+                    </flux:button>
+                    <flux:button
+                        size="sm"
+                        :variant="$date_preset === 'month' ? 'primary' : 'ghost'"
+                        wire:click="applyPreset('month')"
+                    >
+                        {{ __('This month') }}
+                    </flux:button>
+                    <flux:button
+                        size="sm"
+                        :variant="$date_preset === 'custom' ? 'primary' : 'ghost'"
+                        wire:click="applyPreset('custom')"
+                    >
+                        {{ __('Custom') }}
+                    </flux:button>
+                </div>
+                @if ($date_preset === 'custom')
+                    <flux:field>
+                        <flux:label>{{ __('From') }}</flux:label>
+                        <flux:input type="date" wire:model.live="date_from" />
+                    </flux:field>
+                    <flux:field>
+                        <flux:label>{{ __('To') }}</flux:label>
+                        <flux:input type="date" wire:model.live="date_to" />
+                    </flux:field>
+                @else
+                    <flux:text class="text-zinc-500 dark:text-zinc-400">
+                        {{ \Carbon\Carbon::parse($date_from)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($date_to)->format('d/m/Y') }}
+                    </flux:text>
+                @endif
             </flux:card>
 
             <div class="grid gap-6 sm:grid-cols-2">

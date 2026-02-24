@@ -55,10 +55,15 @@ class ReportService
      */
     public function getTopProduk(string $from, string $to, int $limit = 10): Collection
     {
+        $tenant = tenant();
+        if ($tenant === null) {
+            return collect();
+        }
+
         return DB::table('sale_items')
             ->join('sales', 'sale_items.sale_id', '=', 'sales.id')
             ->join('products', 'sale_items.product_id', '=', 'products.id')
-            ->where('sales.tenant_id', tenant()->id)
+            ->where('sales.tenant_id', $tenant->id)
             ->where('sales.status', 'completed')
             ->whereBetween('sales.sale_date', [$from, $to])
             ->selectRaw('
