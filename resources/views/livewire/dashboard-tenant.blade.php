@@ -1,11 +1,38 @@
 <div>
     <div class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl">
-        <div class="flex flex-col gap-1">
-            <flux:heading size="2xl">{{ $this->greeting }}</flux:heading>
-            <flux:text class="text-zinc-500 dark:text-zinc-400">
+        <div class="flex flex-col gap-2">
+            <flux:heading size="4xl">{{ $this->greeting }}</flux:heading>
+            <flux:heading size="xl" class="font-normal text-zinc-500 dark:text-zinc-400">
                 {{ $this->currentDate }}
-            </flux:text>
+            </flux:heading>
         </div>
+
+        <flux:card>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-col gap-1">
+                    <flux:text class="text-zinc-500 dark:text-zinc-400">{{ __('Current plan') }}</flux:text>
+                    @if ($this->tenantSubscription)
+                        <flux:heading size="lg">{{ $this->tenantSubscription->plan?->name ?? __('Subscription') }}</flux:heading>
+                        <div class="mt-2 flex flex-wrap items-center gap-2">
+                            <flux:badge :color="$this->tenantSubscription->status === \App\Domains\Subscription\Models\Subscription::STATUS_ACTIVE ? 'green' : 'zinc'">
+                                {{ ucfirst($this->tenantSubscription->status) }}
+                            </flux:badge>
+                            <flux:text class="text-sm text-zinc-500 dark:text-zinc-400">
+                                {{ __('Valid until') }} {{ $this->tenantSubscription->ends_at?->format('d/m/Y') }}
+                            </flux:text>
+                        </div>
+                    @else
+                        <flux:heading size="lg">{{ __('No active subscription') }}</flux:heading>
+                        <flux:text class="text-sm text-zinc-500 dark:text-zinc-400">
+                            {{ __('Renew or choose a plan to continue using all features.') }}
+                        </flux:text>
+                    @endif
+                </div>
+                <flux:button variant="ghost" size="sm" :href="route('subscription.index')" wire:navigate>
+                    {{ __('Manage subscription') }}
+                </flux:button>
+            </div>
+        </flux:card>
 
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <flux:card>

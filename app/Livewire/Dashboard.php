@@ -106,6 +106,25 @@ class Dashboard extends Component
             ->get();
     }
 
+    /**
+     * Current subscription with plan for tenant dashboard (null if none).
+     */
+    #[Computed]
+    public function tenantSubscription(): ?Subscription
+    {
+        $t = tenant();
+        if ($t === null) {
+            return null;
+        }
+
+        return Subscription::query()
+            ->where('tenant_id', $t->id)
+            ->current()
+            ->with('plan')
+            ->orderByDesc('ends_at')
+            ->first();
+    }
+
     private function now(): Carbon
     {
         $t = tenant();
