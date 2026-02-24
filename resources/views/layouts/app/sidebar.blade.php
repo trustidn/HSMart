@@ -15,13 +15,13 @@
             <flux:spacer />
             <flux:navbar class="gap-1">
                 @if(tenant())
-                    <flux:navbar.item icon="user" :href="route('users.edit', ['userId' => auth()->id()])" :label="'Ubah profil'" wire:navigate />
-                    <flux:navbar.item icon="paint-brush" :href="route('settings.white-label')" :label="'Pengaturan toko'" wire:navigate />
+                    <flux:navbar.item class="max-lg:hidden" icon="user" :href="route('users.edit', ['userId' => auth()->id()])" :label="'Ubah profil'" wire:navigate />
+                    <flux:navbar.item class="max-lg:hidden" icon="paint-brush" :href="route('settings.white-label')" :label="'Pengaturan toko'" wire:navigate />
                 @else
-                    <flux:navbar.item icon="cog-6-tooth" :href="route('profile.edit')" :label="'Pengaturan'" wire:navigate />
+                    <flux:navbar.item class="max-lg:hidden" icon="cog-6-tooth" :href="route('profile.edit')" :label="'Pengaturan'" wire:navigate />
                 @endif
                 <flux:dropdown position="bottom" align="end">
-                    <flux:button variant="ghost" icon="sun" icon:trailing="chevron-down" class="h-8 px-2.5">{{ 'Tampilan' }}</flux:button>
+                    <flux:button variant="ghost" icon="sun" icon:trailing="chevron-down" class="h-8 px-2.5" aria-label="Tampilan" />
                     <flux:menu>
                         <flux:menu.item as="button" type="button" icon="sun" @click="$flux.appearance = 'light'">{{ 'Terang' }}</flux:menu.item>
                         <flux:menu.item as="button" type="button" icon="moon" @click="$flux.appearance = 'dark'">{{ 'Gelap' }}</flux:menu.item>
