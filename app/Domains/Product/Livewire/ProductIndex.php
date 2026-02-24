@@ -2,7 +2,7 @@
 
 namespace App\Domains\Product\Livewire;
 
-use App\Domains\Product\Models\Product;
+use App\Domains\Product\Services\ProductService;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -22,24 +22,12 @@ class ProductIndex extends Component
     #[Computed]
     public function products()
     {
-        $query = Product::query()
-            ->orderBy('name');
-
-        if ($this->search !== '') {
-            $term = '%'.$this->search.'%';
-            $query->where(function ($q) use ($term) {
-                $q->where('name', 'like', $term)
-                    ->orWhere('sku', 'like', $term)
-                    ->orWhere('barcode', 'like', $term);
-            });
-        }
-
-        return $query->paginate(10);
+        return app(ProductService::class)->listForCurrentTenant($this->search, 10);
     }
 
     public function openAdjustStock(int $productId): void
     {
-        $this->dispatch('open-stock-adjustment', productId: $productId);
+        $this->dispatch('open-stock-adjustment', productId: $productId)->to(StockAdjustment::class);
     }
 
     #[On('stock-adjusted')]

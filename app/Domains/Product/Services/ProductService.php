@@ -40,6 +40,35 @@ class ProductService
     }
 
     /**
+     * Paginated list of products for current tenant (resolves tenant from auth when tenant() is null).
+     * Use this in Livewire so the list still loads after nested component updates.
+     *
+     * @return LengthAwarePaginator<Product>
+     */
+    public function listForCurrentTenant(string $search = '', int $perPage = 10): LengthAwarePaginator
+    {
+        $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            return new LengthAwarePaginator([], 0, $perPage);
+        }
+
+        $query = Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->orderBy('name');
+
+        if ($search !== '') {
+            $term = '%'.addcslashes($search, '%_').'%';
+            $query->where(function ($q) use ($term) {
+                $q->where('name', 'like', $term)
+                    ->orWhere('sku', 'like', $term)
+                    ->orWhere('barcode', 'like', $term);
+            });
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    /**
      * Create a new product. Validates SKU and barcode uniqueness for tenant.
      *
      * @param  array<string, mixed>  $data

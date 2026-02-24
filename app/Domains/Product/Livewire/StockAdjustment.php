@@ -19,7 +19,7 @@ class StockAdjustment extends Component
     #[On('open-stock-adjustment')]
     public function openModal(int $productId): void
     {
-        $product = Product::find($productId);
+        $product = app(ProductService::class)->find($productId);
         if ($product === null) {
             return;
         }
@@ -42,7 +42,7 @@ class StockAdjustment extends Component
             'newQuantity' => ['required', 'integer', 'min:0'],
         ]);
 
-        $product = Product::find($this->productId);
+        $product = app(ProductService::class)->find($this->productId);
         if ($product === null) {
             $this->closeModal();
 
@@ -65,7 +65,7 @@ class StockAdjustment extends Component
             return null;
         }
 
-        return Product::find($this->productId);
+        return app(ProductService::class)->find($this->productId);
     }
 
     public function render()
