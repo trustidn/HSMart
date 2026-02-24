@@ -49,10 +49,21 @@
                         <button
                             type="button"
                             wire:click="selectProduct({{ $product->id }})"
-                            class="flex flex-col items-stretch justify-between rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-left shadow-sm transition hover:border-zinc-300 hover:bg-zinc-100 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:border-zinc-500 dark:hover:bg-zinc-700"
+                            class="flex flex-col items-stretch rounded-xl border border-zinc-200 bg-zinc-50 text-left shadow-sm transition hover:border-zinc-300 hover:bg-zinc-100 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:border-zinc-500 dark:hover:bg-zinc-700"
                         >
-                            <span class="line-clamp-2 font-medium text-zinc-900 dark:text-zinc-100">{{ $product->name }}</span>
-                            <span class="mt-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">{{ number_format($product->sell_price, 0, ',', '.') }}</span>
+                            <div class="aspect-square w-full overflow-hidden rounded-t-xl bg-zinc-100 dark:bg-zinc-800">
+                                @if ($product->imageUrl())
+                                    <img src="{{ $product->imageUrl() }}" alt="" class="h-full w-full object-cover" />
+                                @else
+                                    <div class="flex h-full w-full items-center justify-center text-zinc-400">
+                                        <flux:icon name="photo" class="h-12 w-12" />
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="flex flex-1 flex-col justify-between p-3">
+                                <span class="line-clamp-2 font-medium text-zinc-900 dark:text-zinc-100">{{ $product->name }}</span>
+                                <span class="mt-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">{{ number_format($product->sell_price, 0, ',', '.') }}</span>
+                            </div>
                         </button>
                     @empty
                         <div class="col-span-full rounded-xl border border-dashed border-zinc-300 bg-zinc-50/50 py-12 text-center text-zinc-500 dark:border-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400">

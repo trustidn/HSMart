@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\POS\Livewire\PosPage;
+use App\Domains\Product\Livewire\ProductDetail;
 use App\Domains\Product\Livewire\ProductForm;
 use App\Domains\Product\Livewire\ProductIndex;
 use App\Domains\Purchasing\Livewire\PurchaseCreate;
@@ -43,6 +44,7 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant'])->group(funct
     Route::livewire('subscription', SubscriptionPage::class)->name('subscription.index');
     Route::livewire('products', ProductIndex::class)->name('products.index');
     Route::livewire('products/create', ProductForm::class)->name('products.create');
+    Route::livewire('products/{productId}', ProductDetail::class)->name('products.show');
     Route::livewire('products/{productId}/edit', ProductForm::class)->name('products.edit');
     Route::livewire('pos', PosPage::class)->name('pos')->middleware('subscription');
     Route::prefix('purchasing')->name('purchasing.')->group(function () {

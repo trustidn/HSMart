@@ -9,6 +9,17 @@
 
             <form wire:submit="save" class="max-w-2xl space-y-6">
                 <flux:field>
+                    <flux:label>{{ __('Product photo') }}</flux:label>
+                    @if ($this->product?->imageUrl())
+                        <div class="mb-2">
+                            <img src="{{ $this->product->imageUrl() }}" alt="" class="h-24 w-24 rounded-lg border border-zinc-200 object-cover dark:border-zinc-700" />
+                        </div>
+                    @endif
+                    <flux:input type="file" wire:model="photo" accept="image/*" />
+                    <flux:error name="photo" />
+                </flux:field>
+
+                <flux:field>
                     <flux:label>{{ __('SKU') }}</flux:label>
                     <flux:input wire:model="sku" required />
                     <flux:error name="sku" />

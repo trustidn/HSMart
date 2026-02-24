@@ -2,10 +2,13 @@
 
 namespace App\Domains\Product\Models;
 
+use App\Domains\Purchasing\Models\PurchaseItem;
 use App\Models\Concerns\BelongsToTenant;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -31,6 +34,7 @@ class Product extends Model
         'stock',
         'minimum_stock',
         'is_active',
+        'image_path',
     ];
 
     /**
@@ -52,5 +56,26 @@ class Product extends Model
     public function isLowStock(): bool
     {
         return $this->minimum_stock > 0 && $this->stock <= $this->minimum_stock;
+    }
+
+    /**
+     * Purchase items (purchases that included this product).
+     *
+     * @return HasMany<PurchaseItem, $this>
+     */
+    public function purchaseItems(): HasMany
+    {
+        return $this->hasMany(PurchaseItem::class);
+    }
+
+    public function imageUrl(): ?string
+    {
+        if (! $this->image_path) {
+            return null;
+        }
+
+        return Storage::disk('public')->exists($this->image_path)
+            ? Storage::disk('public')->url($this->image_path)
+            : null;
     }
 }
