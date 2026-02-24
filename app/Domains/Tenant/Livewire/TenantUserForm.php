@@ -30,7 +30,7 @@ class TenantUserForm extends Component
             if (! $user) {
                 abort(404);
             }
-            if ($user->isTenantOwner()) {
+            if ($user->isTenantOwner() && $user->id !== auth()->id()) {
                 abort(403, __('You cannot edit the tenant owner here.'));
             }
             $this->userId = $user->id;
@@ -57,6 +57,11 @@ class TenantUserForm extends Component
             }
             app(UserService::class)->update($user, $data, false);
             session()->flash('message', __('User updated.'));
+            if ($user->id === auth()->id() && ! auth()->user()->isTenantOwner()) {
+                $this->redirectRoute('dashboard', navigate: true);
+
+                return;
+            }
         } else {
             $this->validate([
                 'name' => $this->nameRules(),
@@ -73,9 +78,18 @@ class TenantUserForm extends Component
         $this->redirectRoute('users.index', navigate: true);
     }
 
+    public function isEditingSelf(): bool
+    {
+        return $this->userId === auth()->id();
+    }
+
     public function render()
     {
-        return view('domains.tenant.livewire.tenant-user-form')
-            ->layout('layouts.app', ['title' => $this->userId ? __('Edit User') : __('New User')]);
+        $title = $this->userId
+            ? ($this->isEditingSelf() ? __('Edit profile') : __('Edit User'))
+            : __('New User');
+
+        return view('domains.tenant.livewire.tenant-user-form', ['isEditingSelf' => $this->isEditingSelf()])
+            ->layout('layouts.app', ['title' => $title]);
     }
 }

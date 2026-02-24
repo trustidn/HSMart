@@ -59,3 +59,33 @@ test('tenant user cannot access admin tenants page', function () {
     $response = $this->get(route('admin.tenants'));
     $response->assertForbidden();
 });
+
+test('tenant user cannot access settings profile page', function () {
+    $tenant = Tenant::factory()->create();
+    $tenant->setting()->create([
+        'store_name' => $tenant->name,
+        'currency' => 'IDR',
+        'timezone' => 'Asia/Jakarta',
+    ]);
+    Subscription::factory()->active()->create(['tenant_id' => $tenant->id]);
+    $user = User::factory()->forTenant($tenant)->create();
+    $this->actingAs($user);
+
+    $response = $this->get(route('profile.edit'));
+    $response->assertForbidden();
+});
+
+test('tenant user can edit own profile via team users edit', function () {
+    $tenant = Tenant::factory()->create();
+    $tenant->setting()->create([
+        'store_name' => $tenant->name,
+        'currency' => 'IDR',
+        'timezone' => 'Asia/Jakarta',
+    ]);
+    Subscription::factory()->active()->create(['tenant_id' => $tenant->id]);
+    $user = User::factory()->forTenant($tenant)->create();
+    $this->actingAs($user);
+
+    $response = $this->get(route('users.edit', ['userId' => $user->id]));
+    $response->assertOk();
+});

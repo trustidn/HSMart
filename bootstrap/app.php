@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'require.tenant' => \App\Domains\Tenant\Middleware\RequireTenant::class,
             'superadmin' => \App\Domains\Tenant\Middleware\EnsureSuperadmin::class,
             'tenant.owner' => \App\Domains\Tenant\Middleware\EnsureTenantOwner::class,
+            'tenant.edit.self.or.owner' => \App\Domains\Tenant\Middleware\AllowTenantUserEditSelfOrOwner::class,
             'subscription' => \App\Domains\Subscription\Middleware\CheckSubscription::class,
         ]);
     })

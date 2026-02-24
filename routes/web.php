@@ -38,6 +38,8 @@ Route::view('subscription/expired', 'subscription-expired')
 Route::middleware(['auth', 'verified', 'tenant', 'require.tenant', 'tenant.owner'])->group(function () {
     Route::livewire('team/users', TenantUserList::class)->name('users.index');
     Route::livewire('team/users/create', TenantUserForm::class)->name('users.create');
+});
+Route::middleware(['auth', 'verified', 'tenant', 'require.tenant', 'tenant.edit.self.or.owner'])->group(function () {
     Route::livewire('team/users/{userId}/edit', TenantUserForm::class)->name('users.edit');
 });
 

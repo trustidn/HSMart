@@ -106,9 +106,15 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
-                        </flux:menu.item>
+                        @if(tenant())
+                            <flux:menu.item :href="route('users.edit', ['userId' => auth()->id()])" icon="user" wire:navigate>
+                                {{ __('Edit profile') }}
+                            </flux:menu.item>
+                        @else
+                            <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
+                                {{ __('Settings') }}
+                            </flux:menu.item>
+                        @endif
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />

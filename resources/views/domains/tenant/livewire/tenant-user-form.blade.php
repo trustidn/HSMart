@@ -1,16 +1,22 @@
 <div>
     <div class="flex h-full w-full flex-1 flex-col gap-6 rounded-xl">
         <div class="flex items-center gap-2">
-            <flux:link :href="route('users.index')" wire:navigate icon="arrow-left" icon-position="left">
-                {{ __('Users') }}
-            </flux:link>
+            @if($isEditingSelf ?? false)
+                <flux:link :href="auth()->user()->isTenantOwner() ? route('users.index') : route('dashboard')" wire:navigate icon="arrow-left" icon-position="left">
+                    {{ auth()->user()->isTenantOwner() ? __('Users') : __('Dashboard') }}
+                </flux:link>
+            @else
+                <flux:link :href="route('users.index')" wire:navigate icon="arrow-left" icon-position="left">
+                    {{ __('Users') }}
+                </flux:link>
+            @endif
         </div>
 
         @if (session('message'))
             <flux:callout variant="success">{{ session('message') }}</flux:callout>
         @endif
 
-        <flux:heading size="xl">{{ $userId ? __('Edit User') : __('New User') }}</flux:heading>
+        <flux:heading size="xl">{{ $userId ? ($isEditingSelf ?? false ? __('Edit profile') : __('Edit User')) : __('New User') }}</flux:heading>
 
         <form wire:submit="save" class="max-w-2xl space-y-6">
             <flux:field>

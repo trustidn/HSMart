@@ -5,9 +5,14 @@
                 <flux:heading size="xl">{{ __('Users') }}</flux:heading>
                 <flux:subheading>{{ __('Manage users for this store. Only members can be added or edited here.') }}</flux:subheading>
             </div>
-            <flux:button variant="primary" icon="plus" :href="route('users.create')" wire:navigate>
-                {{ __('New User') }}
-            </flux:button>
+            <div class="flex flex-wrap items-center gap-2">
+                <flux:button variant="ghost" size="sm" icon="user" :href="route('users.edit', ['userId' => auth()->id()])" wire:navigate>
+                    {{ __('Edit my profile') }}
+                </flux:button>
+                <flux:button variant="primary" icon="plus" :href="route('users.create')" wire:navigate>
+                    {{ __('New User') }}
+                </flux:button>
+            </div>
         </div>
 
         @if (session('message'))
@@ -49,7 +54,9 @@
                                     </flux:menu>
                                 </flux:dropdown>
                             @else
-                                —
+                                <flux:link :href="route('users.edit', ['userId' => $user->id])" wire:navigate size="sm">
+                                    {{ __('Edit profile') }}
+                                </flux:link>
                             @endif
                         </flux:table.cell>
                     </flux:table.row>
