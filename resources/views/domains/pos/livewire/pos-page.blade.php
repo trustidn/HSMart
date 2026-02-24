@@ -5,7 +5,7 @@
 >
     <flux:heading size="xl" class="sr-only lg:not-sr-only">{{ __('Point of Sale') }}</flux:heading>
 
-    <div class="grid h-full min-h-0 gap-4 lg:grid-cols-1 lg:gap-6 xl:grid-cols-[1fr_400px]">
+    <div class="grid h-full min-h-0 grid-cols-1 gap-4 sm:grid-cols-[1fr_400px] sm:gap-6">
         {{-- Kiri: Pencarian + Grid Produk --}}
         <div class="flex min-h-0 flex-col gap-4">
             <form wire:submit="addByBarcode" class="shrink-0">
@@ -75,7 +75,7 @@
         </div>
 
         {{-- Kanan: Keranjang & Pembayaran --}}
-        <div class="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900 lg:max-h-[calc(100vh-12rem)] lg:overflow-hidden">
+        <div class="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900 sm:max-h-[calc(100vh-12rem)] sm:overflow-hidden">
             <flux:heading size="lg">{{ __('Order') }}</flux:heading>
 
             <div class="min-h-0 flex-1 space-y-2 overflow-auto">
