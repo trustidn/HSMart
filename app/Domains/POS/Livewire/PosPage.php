@@ -19,6 +19,33 @@ class PosPage extends Component
 
     public string $paymentMethod = Payment::METHOD_CASH;
 
+    public bool $showPaymentModal = false;
+
+    public string $amountPaid = '';
+
+    /** @var array{store_name: string, date: string, items: array<int, array{name: string, qty: int, unit_price: float, subtotal: float}>, total: float, amount_paid: float, change: float, receipt_footer: string}|null */
+    public ?array $lastReceipt = null;
+
+    /**
+     * Products for the main grid (click to add to cart). Active products for current tenant.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, Product>
+     */
+    public function getPosProductsProperty(): \Illuminate\Database\Eloquent\Collection
+    {
+        $tenant = $this->resolveTenant();
+        if ($tenant === null) {
+            return collect();
+        }
+
+        return Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->limit(200)
+            ->get();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Collection<int, Product>
      */
@@ -206,12 +233,90 @@ class PosPage extends Component
         return round(array_sum(array_column($this->cart, 'subtotal')), 2);
     }
 
-    public function checkout(): void
+    public function getStoreNameProperty(): string
     {
+        $tenant = $this->resolveTenant();
+
+        return $tenant?->setting?->store_name ?? config('app.name');
+    }
+
+    public function getChangeProperty(): float
+    {
+        $paid = (float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', $this->amountPaid));
+
+        return max(0, round($paid - $this->total, 2));
+    }
+
+    public function openPaymentModal(): void
+    {
+        $this->lastReceipt = null;
+        $this->resetErrorBag('checkout');
+        $this->resetErrorBag('cart');
         if ($this->cart === []) {
             $this->addError('cart', __('Cart is empty'));
 
             return;
+        }
+        $this->amountPaid = (string) (int) $this->total;
+        $this->showPaymentModal = true;
+    }
+
+    public function closePaymentModal(): void
+    {
+        $this->showPaymentModal = false;
+        $this->amountPaid = '';
+    }
+
+    public function confirmAndPay(): void
+    {
+        $this->validate([
+            'amountPaid' => ['required'],
+        ]);
+        $paid = (float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', $this->amountPaid));
+        if ($paid < $this->total) {
+            $this->addError('amountPaid', __('Amount paid must be at least the total.'));
+
+            return;
+        }
+        $change = round($paid - $this->total, 2);
+        $tenant = $this->resolveTenant();
+        $storeName = $tenant?->setting?->store_name ?? config('app.name');
+        $receiptItems = [];
+        foreach ($this->cart as $row) {
+            $receiptItems[] = [
+                'name' => $row['name'],
+                'qty' => (int) $row['qty'],
+                'unit_price' => (float) $row['unit_price'],
+                'subtotal' => (float) $row['subtotal'],
+            ];
+        }
+        $receiptFooter = $tenant?->setting?->receipt_footer ?? '';
+
+        $receiptData = [
+            'store_name' => $storeName,
+            'date' => now()->format('d/m/Y H:i'),
+            'items' => $receiptItems,
+            'total' => $this->total,
+            'amount_paid' => $paid,
+            'change' => $change,
+            'receipt_footer' => $receiptFooter,
+        ];
+
+        try {
+            $this->checkout();
+            $this->lastReceipt = $receiptData;
+            $this->showPaymentModal = false;
+            $this->amountPaid = '';
+            $this->dispatch('focus-pos-barcode');
+        } catch (\DomainException|\InvalidArgumentException $e) {
+            $this->addError('checkout', $e->getMessage());
+        }
+    }
+
+    public function checkout(): void
+    {
+        if ($this->cart === []) {
+            throw new \InvalidArgumentException(__('Cart is empty'));
         }
 
         $items = [];
@@ -223,21 +328,16 @@ class PosPage extends Component
             ];
         }
 
-        try {
-            app(SaleService::class)->createSale(
-                customerName: $this->customerName ?: null,
-                items: $items,
-                amount: $this->total,
-                paymentMethod: $this->paymentMethod
-            );
-            $this->cart = [];
-            $this->customerName = '';
-            session()->flash('sale-completed', true);
-            $this->dispatch('sale-completed');
-            $this->dispatch('focus-pos-barcode');
-        } catch (\DomainException|\InvalidArgumentException $e) {
-            $this->addError('checkout', $e->getMessage());
-        }
+        app(SaleService::class)->createSale(
+            customerName: $this->customerName ?: null,
+            items: $items,
+            amount: $this->total,
+            paymentMethod: $this->paymentMethod
+        );
+        $this->cart = [];
+        $this->customerName = '';
+        session()->flash('sale-completed', true);
+        $this->dispatch('sale-completed');
     }
 
     private function resolveTenant(): ?Tenant
