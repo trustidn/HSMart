@@ -35,15 +35,21 @@
                 <flux:error name="password" />
             </flux:field>
             <flux:field>
-                <flux:label>{{ __('Confirm password') }}</flux:label>
-                <flux:input type="password" wire:model="password_confirmation" autocomplete="new-password" />
+                <flux:label>{{ $userId ? __('Confirm password (if changing)') : __('Confirm password') }}</flux:label>
+                <flux:input type="password" wire:model="password_confirmation" autocomplete="new-password" id="password_confirmation" />
                 <flux:error name="password_confirmation" />
             </flux:field>
             <div class="flex gap-3">
                 <flux:button type="submit" variant="primary">{{ __('Save') }}</flux:button>
-                <flux:button type="button" variant="ghost" :href="route('users.index')" wire:navigate>
-                    {{ __('Cancel') }}
-                </flux:button>
+                @if($isEditingSelf ?? false)
+                    <flux:button type="button" variant="ghost" :href="auth()->user()->isTenantOwner() ? route('users.index') : route('dashboard')" wire:navigate>
+                        {{ __('Cancel') }}
+                    </flux:button>
+                @else
+                    <flux:button type="button" variant="ghost" :href="route('users.index')" wire:navigate>
+                        {{ __('Cancel') }}
+                    </flux:button>
+                @endif
             </div>
         </form>
     </div>

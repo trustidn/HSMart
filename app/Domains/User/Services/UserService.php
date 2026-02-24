@@ -90,8 +90,11 @@ class UserService
             }
             $user->save();
         } else {
-            if (auth()->user()->tenant_id !== $user->tenant_id || $user->isTenantOwner()) {
+            if (auth()->user()->tenant_id !== $user->tenant_id) {
                 abort(403, __('You can only edit members of your tenant.'));
+            }
+            if ($user->isTenantOwner() && auth()->id() !== $user->id) {
+                abort(403, __('You cannot edit the tenant owner here.'));
             }
             if (array_key_exists('name', $data)) {
                 $user->name = $data['name'];
