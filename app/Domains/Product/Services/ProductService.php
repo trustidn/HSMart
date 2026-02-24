@@ -75,6 +75,7 @@ class ProductService
      */
     public function create(array $data): Product
     {
+        $data = $this->normalizeProductData($data);
         $this->validateSkuUniqueness($data['sku'] ?? '', null);
         $this->validateBarcodeUniqueness($data['barcode'] ?? null, null);
 
@@ -97,6 +98,7 @@ class ProductService
      */
     public function update(Product $product, array $data): Product
     {
+        $data = $this->normalizeProductData($data);
         $this->validateSkuUniqueness($data['sku'] ?? $product->sku, $product->id);
         $this->validateBarcodeUniqueness($data['barcode'] ?? $product->barcode, $product->id);
 
@@ -157,6 +159,22 @@ class ProductService
         if ($query->exists()) {
             throw new \InvalidArgumentException("SKU \"{$sku}\" already exists for this tenant.");
         }
+    }
+
+    /**
+     * Normalize product data: empty barcode string becomes null so the unique
+     * constraint (tenant_id, barcode) allows multiple rows with no barcode.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function normalizeProductData(array $data): array
+    {
+        if (array_key_exists('barcode', $data) && $data['barcode'] === '') {
+            $data['barcode'] = null;
+        }
+
+        return $data;
     }
 
     private function validateBarcodeUniqueness(?string $barcode, ?int $excludeProductId): void

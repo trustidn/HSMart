@@ -62,9 +62,9 @@ test('product detail page shows product, sales stats and adjust stock button', f
     Livewire::test(\App\Domains\Product\Livewire\ProductDetail::class, ['productId' => $product->id])
         ->assertOk()
         ->assertSee('Detail Product')
-        ->assertSee('Adjust Stock')
-        ->assertSee('Quantity sold')
-        ->assertSee('Total sales value');
+        ->assertSee('Sesuaikan Stok')
+        ->assertSee('Jumlah terjual')
+        ->assertSee('Total nilai penjualan');
 });
 
 test('can update product', function () {
