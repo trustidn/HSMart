@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
+    
     /**
      * Register any application services.
      */
@@ -35,7 +37,13 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(SaleCompleted::class, RecordSaleJournal::class);
         Event::listen(PurchaseCompleted::class, AddPurchaseStock::class);
         Event::listen(PurchaseCompleted::class, RecordPurchaseJournal::class);
+
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
+
+    
 
     /**
      * Configure default behaviors for production-ready applications.
