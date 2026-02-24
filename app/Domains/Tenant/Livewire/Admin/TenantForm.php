@@ -39,20 +39,20 @@ class TenantForm extends Component
                 'name' => $this->name,
                 'slug' => $this->slug,
             ]);
-            session()->flash('message', __('Tenant updated.'));
+            session()->flash('message', 'Tenant berhasil diperbarui.');
         } else {
             $this->validate([
                 'name' => ['required', 'string', 'max:255'],
             ]);
             app(TenantService::class)->create($this->name);
-            session()->flash('message', __('Tenant created.'));
+            session()->flash('message', 'Tenant berhasil dibuat.');
         }
         $this->redirectRoute('admin.tenants', navigate: true);
     }
 
     public function render()
     {
-        $title = $this->tenantId ? __('Edit Tenant') : __('New Tenant');
+        $title = $this->tenantId ? 'Ubah Tenant' : 'Tenant Baru';
 
         return view('domains.tenant.livewire.admin.tenant-form')
             ->layout('layouts.app', ['title' => $title]);

@@ -16,16 +16,16 @@
 <body>
     <h1>{{ $title }}</h1>
     @if(!empty($tenantName))
-        <p class="meta">{{ __('Tenant') }}: {{ $tenantName }}</p>
+        <p class="meta">{{ 'Tenant' }}: {{ $tenantName }}</p>
     @endif
     <p class="meta">{{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}</p>
     <table>
         <thead>
             <tr>
-                <th>{{ __('Product') }}</th>
-                <th>{{ __('SKU') }}</th>
-                <th class="num">{{ __('Qty sold') }}</th>
-                <th class="num">{{ __('Revenue') }}</th>
+                <th>{{ 'Produk' }}</th>
+                <th>{{ 'SKU' }}</th>
+                <th class="num">{{ 'Jumlah terjual' }}</th>
+                <th class="num">{{ 'Pendapatan' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -38,7 +38,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">{{ __('No sales in this period.') }}</td>
+                    <td colspan="4">{{ 'Tidak ada penjualan dalam periode ini.' }}</td>
                 </tr>
             @endforelse
         </tbody>

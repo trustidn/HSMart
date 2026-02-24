@@ -15,17 +15,17 @@
             <flux:spacer />
             <flux:navbar class="gap-1">
                 @if(tenant())
-                    <flux:navbar.item icon="user" :href="route('users.edit', ['userId' => auth()->id()])" :label="__('Edit profile')" wire:navigate />
-                    <flux:navbar.item icon="paint-brush" :href="route('settings.white-label')" :label="__('Store settings')" wire:navigate />
+                    <flux:navbar.item icon="user" :href="route('users.edit', ['userId' => auth()->id()])" :label="'Ubah profil'" wire:navigate />
+                    <flux:navbar.item icon="paint-brush" :href="route('settings.white-label')" :label="'Pengaturan toko'" wire:navigate />
                 @else
-                    <flux:navbar.item icon="cog-6-tooth" :href="route('profile.edit')" :label="__('Settings')" wire:navigate />
+                    <flux:navbar.item icon="cog-6-tooth" :href="route('profile.edit')" :label="'Pengaturan'" wire:navigate />
                 @endif
                 <flux:dropdown position="bottom" align="end">
-                    <flux:button variant="ghost" icon="sun" icon:trailing="chevron-down" class="h-8 px-2.5">{{ __('Appearance') }}</flux:button>
+                    <flux:button variant="ghost" icon="sun" icon:trailing="chevron-down" class="h-8 px-2.5">{{ 'Tampilan' }}</flux:button>
                     <flux:menu>
-                        <flux:menu.item as="button" type="button" icon="sun" @click="$flux.appearance = 'light'">{{ __('Light') }}</flux:menu.item>
-                        <flux:menu.item as="button" type="button" icon="moon" @click="$flux.appearance = 'dark'">{{ __('Dark') }}</flux:menu.item>
-                        <flux:menu.item as="button" type="button" icon="computer-desktop" @click="$flux.appearance = 'system'">{{ __('System') }}</flux:menu.item>
+                        <flux:menu.item as="button" type="button" icon="sun" @click="$flux.appearance = 'light'">{{ 'Terang' }}</flux:menu.item>
+                        <flux:menu.item as="button" type="button" icon="moon" @click="$flux.appearance = 'dark'">{{ 'Gelap' }}</flux:menu.item>
+                        <flux:menu.item as="button" type="button" icon="computer-desktop" @click="$flux.appearance = 'system'">{{ 'Sistem' }}</flux:menu.item>
                     </flux:menu>
                 </flux:dropdown>
             </flux:navbar>
@@ -48,11 +48,11 @@
                     <flux:menu.separator />
                     @if(tenant())
                         <flux:menu.item :href="route('users.edit', ['userId' => auth()->id()])" icon="user" wire:navigate>
-                            {{ __('Edit profile') }}
+                            {{ 'Ubah profil' }}
                         </flux:menu.item>
                     @else
                         <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
+                            {{ 'Pengaturan' }}
                         </flux:menu.item>
                     @endif
                     <flux:menu.separator />
@@ -65,7 +65,7 @@
                             class="w-full cursor-pointer"
                             data-test="logout-button"
                         >
-                            {{ __('Log Out') }}
+                            {{ 'Keluar' }}
                         </flux:menu.item>
                     </form>
                 </flux:menu>
@@ -80,48 +80,48 @@
             <flux:sidebar.nav>
                 @if(tenant())
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                        {{ 'Beranda' }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="shopping-cart" :href="route('pos')" :current="request()->routeIs('pos')" wire:navigate>
-                        {{ __('POS') }}
+                        {{ 'Kasir' }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="cube" :href="route('products.index')" :current="request()->routeIs('products.*')" wire:navigate>
-                        {{ __('Products') }}
+                        {{ 'Produk' }}
                     </flux:sidebar.item>
-                    <flux:sidebar.group :heading="__('Purchasing')" icon="truck" expandable>
+                    <flux:sidebar.group :heading="'Pembelian'" icon="truck" expandable>
                         <flux:sidebar.item icon="truck" :href="route('purchasing.purchases.index')" :current="request()->routeIs('purchasing.purchases.*')" wire:navigate>
-                            {{ __('Purchases') }}
+                            {{ 'Pembelian' }}
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="building-storefront" :href="route('purchasing.suppliers.index')" :current="request()->routeIs('purchasing.suppliers.*')" wire:navigate>
-                            {{ __('Suppliers') }}
+                            {{ 'Pemasok' }}
                         </flux:sidebar.item>
                     </flux:sidebar.group>
                     <flux:sidebar.item icon="chart-bar" :href="route('reports')" :current="request()->routeIs('reports')" wire:navigate>
-                        {{ __('Reports') }}
+                        {{ 'Laporan' }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="paint-brush" :href="route('settings.white-label')" :current="request()->routeIs('settings.white-label')" wire:navigate>
-                        {{ __('Store settings') }}
+                        {{ 'Pengaturan toko' }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="credit-card" :href="route('subscription.index')" :current="request()->routeIs('subscription.index')" wire:navigate>
-                        {{ __('Subscription') }}
+                        {{ 'Langganan' }}
                     </flux:sidebar.item>
                     @if(auth()->user()->isTenantOwner())
                         <flux:sidebar.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>
-                            {{ __('Users') }}
+                            {{ 'Pengguna' }}
                         </flux:sidebar.item>
                     @endif
                 @else
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                        {{ 'Beranda' }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="building-office-2" :href="route('admin.tenants')" :current="request()->routeIs('admin.tenants*')" wire:navigate>
-                        {{ __('Tenant Management') }}
+                        {{ 'Kelola Tenant' }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="credit-card" :href="route('admin.plans')" :current="request()->routeIs('admin.plans*')" wire:navigate>
-                        {{ __('Subscription Plans') }}
+                        {{ 'Paket Langganan' }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
-                        {{ __('User Management') }}
+                        {{ 'Kelola Pengguna' }}
                     </flux:sidebar.item>
                 @endif
             </flux:sidebar.nav>
@@ -132,8 +132,8 @@
         @if(tenant() && !app(\App\Domains\Subscription\Services\SubscriptionService::class)->isActive(tenant()))
             <div class="sticky top-0 z-10 mx-4 mt-4">
                 <flux:callout variant="warning" icon="exclamation-triangle">
-                    {{ __('Your subscription has expired. You can view data but cannot create new sales or purchases.') }}
-                    <flux:link :href="route('subscription.expired')" wire:navigate class="font-medium">{{ __('Details') }}</flux:link>
+                    {{ 'Langganan Anda telah berakhir. Anda dapat melihat data tetapi tidak dapat membuat penjualan atau pembelian baru.' }}
+                    <flux:link :href="route('subscription.expired')" wire:navigate class="font-medium">{{ 'Detail' }}</flux:link>
                 </flux:callout>
             </div>
         @endif

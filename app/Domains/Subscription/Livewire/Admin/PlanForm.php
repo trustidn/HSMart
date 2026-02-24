@@ -50,17 +50,17 @@ class PlanForm extends Component
 
         if ($this->planId !== null) {
             SubscriptionPlan::findOrFail($this->planId)->update($data);
-            session()->flash('message', __('Plan updated.'));
+            session()->flash('message', 'Paket berhasil diperbarui.');
         } else {
             SubscriptionPlan::create($data);
-            session()->flash('message', __('Plan created.'));
+            session()->flash('message', 'Paket berhasil dibuat.');
         }
         $this->redirectRoute('admin.plans', navigate: true);
     }
 
     public function render()
     {
-        $title = $this->planId ? __('Edit Plan') : __('New Plan');
+        $title = $this->planId ? 'Ubah Paket' : 'Paket Baru';
 
         return view('domains.subscription.livewire.admin.plan-form')
             ->layout('layouts.app', ['title' => $title]);

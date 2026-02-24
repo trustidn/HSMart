@@ -22,7 +22,7 @@ class UserService
             $isOwner = (bool) ($data['is_tenant_owner'] ?? false);
             if ($isOwner && $tenantId === null) {
                 throw ValidationException::withMessages([
-                    'tenant_id' => [__('Tenant is required when creating an owner.')],
+                    'tenant_id' => ['Tenant wajib saat membuat pemilik.'],
                 ]);
             }
             if ($tenantId !== null && $isOwner) {
@@ -38,7 +38,7 @@ class UserService
         } else {
             $tenantId = auth()->user()->tenant_id;
             if (! $tenantId || ! auth()->user()->isTenantOwner()) {
-                abort(403, __('Only tenant owner or superadmin can create users.'));
+                abort(403, 'Hanya pemilik tenant atau superadmin yang dapat membuat pengguna.');
             }
             $user = User::create([
                 'name' => $data['name'],
@@ -66,7 +66,7 @@ class UserService
                 $tenantId = $data['tenant_id'] ?? $user->tenant_id;
                 if ($isOwner && $tenantId === null) {
                     throw ValidationException::withMessages([
-                        'tenant_id' => [__('Tenant is required for owner.')],
+                        'tenant_id' => ['Tenant wajib untuk pemilik.'],
                     ]);
                 }
                 if ($tenantId !== null) {
@@ -91,10 +91,10 @@ class UserService
             $user->save();
         } else {
             if (auth()->user()->tenant_id !== $user->tenant_id) {
-                abort(403, __('You can only edit members of your tenant.'));
+                abort(403, 'Anda hanya dapat mengubah anggota tenant Anda.');
             }
             if ($user->isTenantOwner() && auth()->id() !== $user->id) {
-                abort(403, __('You cannot edit the tenant owner here.'));
+                abort(403, 'Anda tidak dapat mengubah pemilik tenant di sini.');
             }
             if (array_key_exists('name', $data)) {
                 $user->name = $data['name'];
@@ -120,10 +120,10 @@ class UserService
             return;
         }
         if (auth()->id() === $user->id) {
-            abort(403, __('You cannot delete yourself.'));
+            abort(403, 'Anda tidak dapat menghapus diri sendiri.');
         }
         if (auth()->user()->tenant_id !== $user->tenant_id || $user->isTenantOwner()) {
-            abort(403, __('You can only delete members of your tenant.'));
+            abort(403, 'Anda hanya dapat menghapus anggota tenant Anda.');
         }
         $user->delete();
     }
@@ -136,7 +136,7 @@ class UserService
         }
         if ($query->exists()) {
             throw ValidationException::withMessages([
-                'is_tenant_owner' => [__('This tenant already has an owner.')],
+                'is_tenant_owner' => ['Tenant ini sudah memiliki pemilik.'],
             ]);
         }
     }

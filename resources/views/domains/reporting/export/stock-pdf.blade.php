@@ -16,17 +16,17 @@
 <body>
     <h1>{{ $title }}</h1>
     @if(!empty($tenantName))
-        <p class="meta">{{ __('Tenant') }}: {{ $tenantName }}</p>
+        <p class="meta">{{ 'Tenant' }}: {{ $tenantName }}</p>
     @endif
-    <p class="meta">{{ __('As of') }} {{ $dateLabel }}@if($lowStockOnly) ({{ __('Low stock only') }})@endif</p>
+    <p class="meta">{{ 'Per' }} {{ $dateLabel }}@if($lowStockOnly) ({{ 'Hanya stok rendah' }})@endif</p>
     <table>
         <thead>
             <tr>
-                <th>{{ __('SKU') }}</th>
-                <th>{{ __('Name') }}</th>
-                <th class="num">{{ __('Stock') }}</th>
-                <th class="num">{{ __('Min. stock') }}</th>
-                <th>{{ __('Status') }}</th>
+                <th>{{ 'SKU' }}</th>
+                <th>{{ 'Nama' }}</th>
+                <th class="num">{{ 'Stok' }}</th>
+                <th class="num">{{ 'Stok min.' }}</th>
+                <th>{{ 'Status' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -36,11 +36,11 @@
                     <td>{{ $product->name }}</td>
                     <td class="num">{{ $product->stock }}</td>
                     <td class="num">{{ $product->minimum_stock }}</td>
-                    <td>{{ $product->isLowStock() ? __('Low stock') : __('OK') }}</td>
+                    <td>{{ $product->isLowStock() ? 'Stok rendah' : 'OK' }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5">{{ $lowStockOnly ? __('No products with low stock.') : __('No products.') }}</td>
+                    <td colspan="5">{{ $lowStockOnly ? 'Tidak ada produk dengan stok rendah.' : 'Tidak ada produk.' }}</td>
                 </tr>
             @endforelse
         </tbody>

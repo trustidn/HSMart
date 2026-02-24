@@ -32,7 +32,7 @@ class SubscriptionService
     {
         $plan = SubscriptionPlan::findOrFail($planId);
         if (! $plan->is_active) {
-            throw new \InvalidArgumentException(__('Selected plan is not active.'));
+            throw new \InvalidArgumentException('Paket yang dipilih tidak aktif.');
         }
         $durationDays = $plan->duration_months * 30;
         $startedAt = CarbonImmutable::now();
@@ -57,7 +57,7 @@ class SubscriptionService
     {
         $plan = SubscriptionPlan::findOrFail($planId);
         if (! $plan->is_active) {
-            throw new \InvalidArgumentException(__('Selected plan is not active.'));
+            throw new \InvalidArgumentException('Paket yang dipilih tidak aktif.');
         }
         $durationDays = $plan->duration_months * 30;
         $requestedAt = CarbonImmutable::now();
@@ -80,7 +80,7 @@ class SubscriptionService
     public function approveSubscription(Subscription $subscription): Subscription
     {
         if ($subscription->status !== Subscription::STATUS_PENDING) {
-            throw new \DomainException(__('Only pending subscriptions can be approved.'));
+            throw new \DomainException('Hanya langganan tertunda yang dapat disetujui.');
         }
         $durationDays = (int) $subscription->duration_days;
         $startedAt = CarbonImmutable::now();

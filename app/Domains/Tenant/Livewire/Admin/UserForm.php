@@ -69,7 +69,7 @@ class UserForm extends Component
                 $data['password'] = $this->password;
             }
             app(UserService::class)->update($user, $data, true);
-            session()->flash('message', __('User updated.'));
+            session()->flash('message', 'Pengguna berhasil diperbarui.');
         } else {
             $this->validate([
                 'name' => $this->nameRules(),
@@ -85,7 +85,7 @@ class UserForm extends Component
                 'tenant_id' => $this->tenant_id,
                 'is_tenant_owner' => $this->is_tenant_owner,
             ], true);
-            session()->flash('message', __('User created.'));
+            session()->flash('message', 'Pengguna berhasil dibuat.');
         }
         $this->redirectRoute('admin.users', navigate: true);
     }
@@ -93,6 +93,6 @@ class UserForm extends Component
     public function render()
     {
         return view('domains.tenant.livewire.admin.user-form')
-            ->layout('layouts.app', ['title' => $this->userId ? __('Edit User') : __('New User')]);
+            ->layout('layouts.app', ['title' => $this->userId ? 'Ubah Pengguna' : 'Pengguna Baru']);
     }
 }

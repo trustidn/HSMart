@@ -81,6 +81,6 @@ class ProductDetail extends Component
     public function render()
     {
         return view('domains.product.livewire.product-detail')
-            ->layout('layouts.app', ['title' => $this->product?->name ?? __('Product')]);
+            ->layout('layouts.app', ['title' => $this->product?->name ?? 'Produk']);
     }
 }

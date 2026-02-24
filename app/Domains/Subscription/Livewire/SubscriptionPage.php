@@ -59,13 +59,13 @@ class SubscriptionPage extends Component
             abort(403);
         }
         app(SubscriptionService::class)->requestExtension($tenant, (int) $this->selected_plan_id);
-        session()->flash('subscription_message', __('Extension request submitted. Waiting for admin approval.'));
+        session()->flash('subscription_message', 'Permintaan perpanjangan dikirim. Menunggu persetujuan admin.');
         $this->selected_plan_id = null;
     }
 
     public function render()
     {
         return view('domains.subscription.livewire.subscription-page')
-            ->layout('layouts.app', ['title' => __('Subscription')]);
+            ->layout('layouts.app', ['title' => 'Langganan']);
     }
 }

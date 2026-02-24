@@ -77,7 +77,7 @@ class ProductForm extends Component
             if ($this->productId !== null) {
                 $product = $service->find($this->productId);
                 if ($product === null) {
-                    $this->addError('sku', __('Product not found. It may have been deleted or you do not have access.'));
+                    $this->addError('sku', 'Produk tidak ditemukan. Mungkin sudah dihapus atau Anda tidak punya akses.');
 
                     return;
                 }
@@ -103,7 +103,7 @@ class ProductForm extends Component
 
     public function render()
     {
-        $title = $this->productId ? __('Edit Product') : __('New Product');
+        $title = $this->productId ? 'Ubah Produk' : 'Produk Baru';
 
         return view('domains.product.livewire.product-form')
             ->layout('layouts.app', ['title' => $title]);

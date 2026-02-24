@@ -20,6 +20,6 @@ class PlanIndex extends Component
     public function render()
     {
         return view('domains.subscription.livewire.admin.plan-index')
-            ->layout('layouts.app', ['title' => __('Subscription Plans')]);
+            ->layout('layouts.app', ['title' => 'Paket Langganan']);
     }
 }

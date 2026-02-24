@@ -15,7 +15,7 @@ class Dashboard extends Component
 {
     public function render()
     {
-        $layout = ['title' => __('Dashboard')];
+        $layout = ['title' => 'Beranda'];
 
         if (tenant() !== null) {
             return view('livewire.dashboard-tenant')->layout('layouts.app', $layout);
@@ -31,24 +31,24 @@ class Dashboard extends Component
     public function greeting(): string
     {
         if (tenant() === null) {
-            return __('Dashboard');
+            return 'Beranda';
         }
 
         $user = auth()->user();
-        $name = $user ? (Str::before($user->name, ' ') ?: $user->name) : __('User');
+        $name = $user ? (Str::before($user->name, ' ') ?: $user->name) : 'Pengguna';
         $hour = $this->now()->hour;
 
         if ($hour >= 5 && $hour < 12) {
-            return __('Good morning, :name', ['name' => $name]);
+            return 'Selamat pagi, '.$name;
         }
         if ($hour >= 12 && $hour < 15) {
-            return __('Good afternoon, :name', ['name' => $name]);
+            return 'Selamat siang, '.$name;
         }
         if ($hour >= 15 && $hour < 19) {
-            return __('Good evening, :name', ['name' => $name]);
+            return 'Selamat sore, '.$name;
         }
 
-        return __('Good night, :name', ['name' => $name]);
+        return 'Selamat malam, '.$name;
     }
 
     /**

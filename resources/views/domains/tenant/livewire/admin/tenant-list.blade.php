@@ -2,11 +2,11 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <flux:heading size="xl">{{ __('Tenant Management') }}</flux:heading>
-                <flux:subheading>{{ __('Kelola semua tenant (Superadmin)') }}</flux:subheading>
+                <flux:heading size="xl">{{ 'Manajemen Tenant' }}</flux:heading>
+                <flux:subheading>{{ 'Kelola semua tenant (Superadmin)' }}</flux:subheading>
             </div>
             <flux:button variant="primary" icon="plus" :href="route('admin.tenants.create')" wire:navigate>
-                {{ __('New Tenant') }}
+                {{ 'Tenant Baru' }}
             </flux:button>
         </div>
 
@@ -17,11 +17,11 @@
         <flux:table>
             <flux:table.columns>
                 <flux:table.row>
-                    <flux:table.cell variant="strong">{{ __('Name') }}</flux:table.cell>
-                    <flux:table.cell variant="strong">{{ __('Slug') }}</flux:table.cell>
-                    <flux:table.cell variant="strong" align="end">{{ __('Users') }}</flux:table.cell>
-                    <flux:table.cell variant="strong">{{ __('Subscription') }}</flux:table.cell>
-                    <flux:table.cell variant="strong">{{ __('Created') }}</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ 'Nama' }}</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ 'Slug' }}</flux:table.cell>
+                    <flux:table.cell variant="strong" align="end">{{ 'Pengguna' }}</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ 'Langganan' }}</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ 'Dibuat' }}</flux:table.cell>
                     <flux:table.cell variant="strong" class="w-0"></flux:table.cell>
                 </flux:table.row>
             </flux:table.columns>
@@ -48,10 +48,10 @@
                                 <flux:button size="sm" variant="ghost" icon="ellipsis-horizontal" />
                                 <flux:menu>
                                     <flux:menu.item icon="pencil" :href="route('admin.tenants.edit', ['tenantId' => $tenant->id])" wire:navigate>
-                                        {{ __('Edit') }}
+                                        {{ 'Ubah' }}
                                     </flux:menu.item>
                                     <flux:menu.item icon="trash" wire:click="confirmDelete({{ $tenant->id }})" class="text-red-600 dark:text-red-400">
-                                        {{ __('Delete') }}
+                                        {{ 'Hapus' }}
                                     </flux:menu.item>
                                 </flux:menu>
                             </flux:dropdown>
@@ -60,7 +60,7 @@
                 @empty
                     <flux:table.row>
                         <flux:table.cell colspan="6" class="text-center text-zinc-500 dark:text-zinc-400">
-                            {{ __('No tenants yet.') }}
+                            {{ 'Belum ada tenant.' }}
                         </flux:table.cell>
                     </flux:table.row>
                 @endforelse
@@ -74,11 +74,11 @@
         @endif
 
         <flux:modal name="confirm-delete-tenant" :show="(bool) $deleteConfirmTenantId" class="space-y-4">
-            <flux:heading size="lg">{{ __('Delete tenant?') }}</flux:heading>
-            <flux:text>{{ __('This will delete the tenant and all related data (products, sales, etc.). Users will be unlinked. This cannot be undone.') }}</flux:text>
+            <flux:heading size="lg">{{ 'Hapus tenant?' }}</flux:heading>
+            <flux:text>{{ 'Tenant dan semua data terkait (produk, penjualan, dll.) akan dihapus. Pengguna akan dilepas. Tindakan ini tidak dapat dibatalkan.' }}</flux:text>
             <div class="flex justify-end gap-2">
-                <flux:button variant="ghost" wire:click="cancelDelete">{{ __('Cancel') }}</flux:button>
-                <flux:button variant="danger" wire:click="deleteTenant">{{ __('Delete') }}</flux:button>
+                <flux:button variant="ghost" wire:click="cancelDelete">{{ 'Batal' }}</flux:button>
+                <flux:button variant="danger" wire:click="deleteTenant">{{ 'Hapus' }}</flux:button>
             </div>
         </flux:modal>
     </div>

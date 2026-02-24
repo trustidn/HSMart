@@ -137,7 +137,7 @@ class PosPage extends Component
 
         $tenant = $this->resolveTenant();
         if ($tenant === null) {
-            $this->addError('barcodeInput', __('Tenant not found'));
+            $this->addError('barcodeInput', 'Tenant tidak ditemukan');
 
             return;
         }
@@ -149,12 +149,12 @@ class PosPage extends Component
             })
             ->first();
         if (! $product) {
-            $this->addError('barcodeInput', __('Product not found'));
+            $this->addError('barcodeInput', 'Produk tidak ditemukan');
 
             return;
         }
         if (! $product->is_active) {
-            $this->addError('barcodeInput', __('Product is inactive'));
+            $this->addError('barcodeInput', 'Produk tidak aktif');
 
             return;
         }
@@ -253,7 +253,7 @@ class PosPage extends Component
         $this->resetErrorBag('checkout');
         $this->resetErrorBag('cart');
         if ($this->cart === []) {
-            $this->addError('cart', __('Cart is empty'));
+            $this->addError('cart', 'Keranjang kosong');
 
             return;
         }
@@ -274,7 +274,7 @@ class PosPage extends Component
         ]);
         $paid = (float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', $this->amountPaid));
         if ($paid < $this->total) {
-            $this->addError('amountPaid', __('Amount paid must be at least the total.'));
+            $this->addError('amountPaid', 'Jumlah bayar minimal harus sama dengan total.');
 
             return;
         }
@@ -316,7 +316,7 @@ class PosPage extends Component
     public function checkout(): void
     {
         if ($this->cart === []) {
-            throw new \InvalidArgumentException(__('Cart is empty'));
+            throw new \InvalidArgumentException('Keranjang kosong');
         }
 
         $items = [];
@@ -356,6 +356,6 @@ class PosPage extends Component
     public function render()
     {
         return view('domains.pos.livewire.pos-page')
-            ->layout('layouts.app', ['title' => __('Point of Sale')]);
+            ->layout('layouts.app', ['title' => 'Kasir']);
     }
 }

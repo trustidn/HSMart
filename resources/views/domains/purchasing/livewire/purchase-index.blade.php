@@ -1,25 +1,25 @@
 <div>
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <flux:heading size="xl">{{ __('Purchases') }}</flux:heading>
+                <flux:heading size="xl">{{ 'Pembelian' }}</flux:heading>
                 <flux:button variant="primary" icon="plus" :href="route('purchasing.purchases.create')" wire:navigate>
-                    {{ __('New Purchase') }}
+                    {{ 'Pembelian Baru' }}
                 </flux:button>
             </div>
 
             <flux:field>
-                <flux:input wire:model.live.debounce.300ms="search" :placeholder="__('Search by PO number or supplier...')" icon="magnifying-glass" />
+                <flux:input wire:model.live.debounce.300ms="search" :placeholder="'Cari nomor PO atau pemasok...'" icon="magnifying-glass" />
             </flux:field>
 
             <flux:table>
                 <flux:table.columns>
                     <flux:table.row>
-                        <flux:table.cell variant="strong">{{ __('PO Number') }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ __('Date') }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ __('Supplier') }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ __('Items') }}</flux:table.cell>
-                        <flux:table.cell variant="strong" align="end">{{ __('Total') }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ __('Status') }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Nomor PO' }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Tanggal' }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Pemasok' }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Item' }}</flux:table.cell>
+                        <flux:table.cell variant="strong" align="end">{{ 'Total' }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Status' }}</flux:table.cell>
                     </flux:table.row>
                 </flux:table.columns>
                 <flux:table.rows>
@@ -44,7 +44,7 @@
                     @empty
                         <flux:table.row>
                             <flux:table.cell colspan="6" class="text-center text-zinc-500 dark:text-zinc-400">
-                                {{ __('No purchases found.') }}
+                                {{ 'Pembelian tidak ditemukan.' }}
                             </flux:table.cell>
                         </flux:table.row>
                     @endforelse

@@ -17,7 +17,7 @@ class AllowTenantUserEditSelfOrOwner
     public function handle(Request $request, Closure $next): Response
     {
         if (tenant() === null) {
-            abort(403, __('Tenant context required.'));
+            abort(403, 'Konteks tenant diperlukan.');
         }
 
         $userId = (int) $request->route('userId');
@@ -30,6 +30,6 @@ class AllowTenantUserEditSelfOrOwner
             return $next($request);
         }
 
-        abort(403, __('Only tenant owner can edit other users.'));
+        abort(403, 'Hanya pemilik tenant yang dapat mengubah pengguna lain.');
     }
 }

@@ -105,6 +105,6 @@ class WhiteLabelSettings extends Component
     public function render()
     {
         return view('domains.settings.livewire.white-label-settings')
-            ->layout('layouts.app', ['title' => __('Store settings')]);
+            ->layout('layouts.app', ['title' => 'Pengaturan toko']);
     }
 }

@@ -39,7 +39,7 @@ class UserList extends Component
         $user = User::find($this->deleteConfirmUserId);
         if ($user) {
             app(UserService::class)->delete($user, true);
-            session()->flash('message', __('User deleted.'));
+            session()->flash('message', 'Pengguna berhasil dihapus.');
         }
         $this->deleteConfirmUserId = null;
         $this->redirectRoute('admin.users', navigate: true);
@@ -48,6 +48,6 @@ class UserList extends Component
     public function render()
     {
         return view('domains.tenant.livewire.admin.user-list')
-            ->layout('layouts.app', ['title' => __('User Management')]);
+            ->layout('layouts.app', ['title' => 'Kelola Pengguna']);
     }
 }

@@ -17,17 +17,17 @@
 <body>
     <h1>{{ $title }}</h1>
     @if(!empty($tenantName))
-        <p class="meta">{{ __('Tenant') }}: {{ $tenantName }}</p>
+        <p class="meta">{{ 'Tenant' }}: {{ $tenantName }}</p>
     @endif
     <p class="meta">{{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}</p>
-    <p class="total">{{ __('Total') }}: {{ number_format($total, 0, ',', '.') }} ({{ $count }} {{ __('transactions') }})</p>
+    <p class="total">{{ 'Total' }}: {{ number_format($total, 0, ',', '.') }} ({{ $count }} {{ 'transaksi' }})</p>
     <table>
         <thead>
             <tr>
-                <th>{{ __('Invoice') }}</th>
-                <th>{{ __('Date') }}</th>
-                <th>{{ __('Customer') }}</th>
-                <th class="num">{{ __('Total') }}</th>
+                <th>{{ 'Faktur' }}</th>
+                <th>{{ 'Tanggal' }}</th>
+                <th>{{ 'Pelanggan' }}</th>
+                <th class="num">{{ 'Total' }}</th>
             </tr>
         </thead>
         <tbody>
@@ -40,13 +40,13 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">{{ __('No sales in this period.') }}</td>
+                    <td colspan="4">{{ 'Tidak ada penjualan dalam periode ini.' }}</td>
                 </tr>
             @endforelse
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3" style="text-align: right; font-weight: bold;">{{ __('Total') }}</td>
+                <td colspan="3" style="text-align: right; font-weight: bold;">{{ 'Total' }}</td>
                 <td class="num" style="font-weight: bold;">{{ number_format($total, 0, ',', '.') }}</td>
             </tr>
         </tfoot>

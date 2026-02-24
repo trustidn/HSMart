@@ -16,11 +16,11 @@ class EnsureTenantOwner
     public function handle(Request $request, Closure $next): Response
     {
         if (tenant() === null) {
-            abort(403, __('Tenant context required.'));
+            abort(403, 'Konteks tenant diperlukan.');
         }
 
         if (! auth()->user()->isTenantOwner()) {
-            abort(403, __('Only tenant owner can access this page.'));
+            abort(403, 'Hanya pemilik tenant yang dapat mengakses halaman ini.');
         }
 
         return $next($request);

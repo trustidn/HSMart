@@ -22,7 +22,7 @@ class PurchaseService
     {
         $tenant = $this->resolveTenant();
         if (! app(SubscriptionService::class)->canCreatePurchase($tenant)) {
-            throw new \DomainException(__('Subscription has expired. You cannot create new purchases.'));
+            throw new \DomainException('Langganan telah berakhir. Anda tidak dapat membuat pembelian baru.');
         }
         $purchaseDate = $purchaseDate ?? now();
         $dateString = $purchaseDate instanceof \DateTimeInterface
@@ -34,7 +34,7 @@ class PurchaseService
                 ->where('tenant_id', $tenant->id)
                 ->find($supplierId);
             if (! $supplier) {
-                throw new \InvalidArgumentException(__('Supplier not found.'));
+                throw new \InvalidArgumentException('Pemasok tidak ditemukan.');
             }
 
             $purchase = Purchase::create([
@@ -93,7 +93,7 @@ class PurchaseService
     {
         $tenant = $this->resolveTenant();
         if (! $tenant) {
-            throw new \DomainException(__('Tenant context required.'));
+            throw new \DomainException('Konteks tenant diperlukan.');
         }
         $count = Purchase::withoutGlobalScopes()
             ->where('tenant_id', $tenant->id)

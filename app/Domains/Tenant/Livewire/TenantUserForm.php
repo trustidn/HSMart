@@ -37,7 +37,7 @@ class TenantUserForm extends Component
                 abort(404);
             }
             if ($user->isTenantOwner() && $user->id !== auth()->id()) {
-                abort(403, __('You cannot edit the tenant owner here.'));
+                abort(403, 'Anda tidak dapat mengubah pemilik tenant di sini.');
             }
             $this->userId = $user->id;
             $this->name = $user->name;
@@ -77,7 +77,7 @@ class TenantUserForm extends Component
                 $data['password'] = $this->password;
             }
             app(UserService::class)->update($user, $data, false);
-            session()->flash('message', __('User updated.'));
+            session()->flash('message', 'Pengguna berhasil diperbarui.');
             if ($user->id === auth()->id() && ! auth()->user()->isTenantOwner()) {
                 $this->redirectRoute('dashboard', navigate: true);
 
@@ -85,7 +85,7 @@ class TenantUserForm extends Component
             }
         } else {
             if (tenant() === null) {
-                abort(403, __('Tenant context required.'));
+                abort(403, 'Konteks tenant diperlukan.');
             }
             $this->validate([
                 'name' => $this->nameRules(),
@@ -97,7 +97,7 @@ class TenantUserForm extends Component
                 'email' => $this->email,
                 'password' => $this->password,
             ], false);
-            session()->flash('message', __('User created.'));
+            session()->flash('message', 'Pengguna berhasil dibuat.');
         }
         $this->redirectRoute('users.index', navigate: true);
     }
@@ -110,8 +110,8 @@ class TenantUserForm extends Component
     public function render()
     {
         $title = $this->userId
-            ? ($this->isEditingSelf() ? __('Edit profile') : __('Edit User'))
-            : __('New User');
+            ? ($this->isEditingSelf() ? 'Ubah profil' : 'Ubah Pengguna')
+            : 'Pengguna Baru';
 
         return view('domains.tenant.livewire.tenant-user-form', ['isEditingSelf' => $this->isEditingSelf()])
             ->layout('layouts.app', ['title' => $title]);

@@ -24,7 +24,7 @@ class ReportExportController
         $sales = $this->reportService->getLaporanPenjualanForExport($from, $to);
 
         $pdf = Pdf::loadView('domains.reporting.export.sales-pdf', [
-            'title' => __('Sales report'),
+            'title' => 'Laporan penjualan',
             'tenantName' => tenant()?->name ?? '',
             'dateFrom' => $from,
             'dateTo' => $to,
@@ -54,12 +54,12 @@ class ReportExportController
             $out = fopen('php://output', 'w');
             $delim = ';';
             fwrite($out, "\xEF\xBB\xBF"); // UTF-8 BOM for Excel
-            fputcsv($out, [__('Sales report')], $delim);
-            fputcsv($out, [__('Tenant'), $tenantName], $delim);
-            fputcsv($out, [__('Period'), $summary['from'].' – '.$summary['to']], $delim);
-            fputcsv($out, [__('Total'), (string) $summary['total'], __('transactions'), (string) $summary['count']], $delim);
+            fputcsv($out, ['Laporan penjualan'], $delim);
+            fputcsv($out, ['Tenant', $tenantName], $delim);
+            fputcsv($out, ['Periode', $summary['from'].' – '.$summary['to']], $delim);
+            fputcsv($out, ['Total', (string) $summary['total'], 'transaksi', (string) $summary['count']], $delim);
             fputcsv($out, [], $delim);
-            fputcsv($out, [__('Invoice'), __('Date'), __('Customer'), __('Total')], $delim);
+            fputcsv($out, ['Faktur', 'Tanggal', 'Pelanggan', 'Total'], $delim);
             foreach ($sales as $sale) {
                 fputcsv($out, [
                     $sale->sale_number,
@@ -69,7 +69,7 @@ class ReportExportController
                 ], $delim);
             }
             fputcsv($out, [], $delim);
-            fputcsv($out, [__('Total'), '', '', (string) $summary['total']], $delim);
+            fputcsv($out, ['Total', '', '', (string) $summary['total']], $delim);
             fclose($out);
         }, $filename, [
             'Content-Type' => 'text/csv; charset=UTF-8',
@@ -85,7 +85,7 @@ class ReportExportController
         $rows = $this->reportService->getTopProduk($from, $to, 500);
 
         $pdf = Pdf::loadView('domains.reporting.export.top-products-pdf', [
-            'title' => __('Top products'),
+            'title' => 'Produk terlaris',
             'tenantName' => tenant()?->name ?? '',
             'dateFrom' => $from,
             'dateTo' => $to,
@@ -112,11 +112,11 @@ class ReportExportController
             $out = fopen('php://output', 'w');
             $delim = ';';
             fwrite($out, "\xEF\xBB\xBF");
-            fputcsv($out, [__('Top products')], $delim);
-            fputcsv($out, [__('Tenant'), $tenantName], $delim);
-            fputcsv($out, [__('Period'), $from.' – '.$to], $delim);
+            fputcsv($out, ['Produk terlaris'], $delim);
+            fputcsv($out, ['Tenant', $tenantName], $delim);
+            fputcsv($out, ['Periode', $from.' – '.$to], $delim);
             fputcsv($out, [], $delim);
-            fputcsv($out, [__('Product'), __('SKU'), __('Qty sold'), __('Revenue')], $delim);
+            fputcsv($out, ['Produk', 'SKU', 'Jumlah terjual', 'Pendapatan'], $delim);
             foreach ($rows as $row) {
                 fputcsv($out, [
                     $row->product_name ?? '',
@@ -138,7 +138,7 @@ class ReportExportController
         $products = $this->reportService->getLaporanStok($lowStockOnly);
 
         $pdf = Pdf::loadView('domains.reporting.export.stock-pdf', [
-            'title' => __('Stock report'),
+            'title' => 'Laporan stok',
             'tenantName' => tenant()?->name ?? '',
             'dateLabel' => now()->format('d/m/Y'),
             'lowStockOnly' => $lowStockOnly,
@@ -163,18 +163,18 @@ class ReportExportController
             $out = fopen('php://output', 'w');
             $delim = ';';
             fwrite($out, "\xEF\xBB\xBF");
-            fputcsv($out, [__('Stock report')], $delim);
-            fputcsv($out, [__('Tenant'), $tenantName], $delim);
-            fputcsv($out, [__('Date'), now()->format('Y-m-d')], $delim);
+            fputcsv($out, ['Laporan stok'], $delim);
+            fputcsv($out, ['Tenant', $tenantName], $delim);
+            fputcsv($out, ['Tanggal', now()->format('Y-m-d')], $delim);
             fputcsv($out, [], $delim);
-            fputcsv($out, [__('SKU'), __('Name'), __('Stock'), __('Min. stock'), __('Status')], $delim);
+            fputcsv($out, ['SKU', 'Nama', 'Stok', 'Stok min.', 'Status'], $delim);
             foreach ($products as $p) {
                 fputcsv($out, [
                     $p->sku,
                     $p->name,
                     (string) $p->stock,
                     (string) $p->minimum_stock,
-                    $p->isLowStock() ? __('Low stock') : __('OK'),
+                    $p->isLowStock() ? 'Stok rendah' : 'OK',
                 ], $delim);
             }
             fclose($out);

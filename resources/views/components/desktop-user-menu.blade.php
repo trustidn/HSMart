@@ -21,11 +21,11 @@
         <flux:menu.radio.group>
             @if(tenant())
                 <flux:menu.item :href="route('users.edit', ['userId' => auth()->id()])" icon="user" wire:navigate>
-                    {{ __('Edit profile') }}
+                    {{ 'Ubah profil' }}
                 </flux:menu.item>
             @else
                 <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                    {{ __('Settings') }}
+                    {{ 'Pengaturan' }}
                 </flux:menu.item>
             @endif
             <form method="POST" action="{{ route('logout') }}" class="w-full">
@@ -37,7 +37,7 @@
                     class="w-full cursor-pointer"
                     data-test="logout-button"
                 >
-                    {{ __('Log Out') }}
+                    {{ 'Keluar' }}
                 </flux:menu.item>
             </form>
         </flux:menu.radio.group>

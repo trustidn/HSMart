@@ -40,7 +40,7 @@ class TenantList extends Component
         $tenant = Tenant::find($this->deleteConfirmTenantId);
         if ($tenant) {
             app(TenantService::class)->delete($tenant);
-            session()->flash('message', __('Tenant deleted.'));
+            session()->flash('message', 'Tenant berhasil dihapus.');
         }
         $this->deleteConfirmTenantId = null;
         $this->redirectRoute('admin.tenants', navigate: true);
@@ -49,6 +49,6 @@ class TenantList extends Component
     public function render()
     {
         return view('domains.tenant.livewire.admin.tenant-list')
-            ->layout('layouts.app', ['title' => __('Tenant Management')]);
+            ->layout('layouts.app', ['title' => 'Kelola Tenant']);
     }
 }

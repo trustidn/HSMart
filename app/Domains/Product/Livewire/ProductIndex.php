@@ -39,6 +39,6 @@ class ProductIndex extends Component
     public function render()
     {
         return view('domains.product.livewire.product-index')
-            ->layout('layouts.app', ['title' => __('Products')]);
+            ->layout('layouts.app', ['title' => 'Produk']);
     }
 }

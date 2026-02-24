@@ -33,6 +33,6 @@ class SupplierIndex extends Component
     public function render()
     {
         return view('domains.purchasing.livewire.supplier-index')
-            ->layout('layouts.app', ['title' => __('Suppliers')]);
+            ->layout('layouts.app', ['title' => 'Pemasok']);
     }
 }

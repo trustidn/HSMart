@@ -77,11 +77,11 @@ class PurchaseCreate extends Component
             'items.*.qty' => ['required', 'integer', 'min:1'],
             'items.*.unit_cost' => ['required', 'numeric', 'min:0'],
         ], [], [
-            'supplierId' => __('Supplier'),
-            'purchase_date' => __('Purchase date'),
-            'items.*.product_id' => __('Product'),
-            'items.*.qty' => __('Quantity'),
-            'items.*.unit_cost' => __('Unit cost'),
+            'supplierId' => 'Pemasok',
+            'purchase_date' => 'Tanggal pembelian',
+            'items.*.product_id' => 'Produk',
+            'items.*.qty' => 'Jumlah',
+            'items.*.unit_cost' => 'Harga beli',
         ]);
 
         $itemPayload = [];
@@ -96,7 +96,7 @@ class PurchaseCreate extends Component
             ];
         }
         if (count($itemPayload) === 0) {
-            $this->addError('items', __('At least one item with a product is required.'));
+            $this->addError('items', 'Minimal satu item dengan produk wajib diisi.');
 
             return;
         }
@@ -105,7 +105,7 @@ class PurchaseCreate extends Component
             $service = app(PurchaseService::class);
             $purchaseDate = \Carbon\CarbonImmutable::parse($this->purchase_date);
             $service->createPurchase($this->supplierId, $itemPayload, $purchaseDate);
-            session()->flash('message', __('Purchase created successfully.'));
+            session()->flash('message', 'Pembelian berhasil dibuat.');
             $this->redirectRoute('purchasing.purchases.index', navigate: true);
         } catch (\DomainException|\InvalidArgumentException $e) {
             $this->addError('items', $e->getMessage());
@@ -115,6 +115,6 @@ class PurchaseCreate extends Component
     public function render()
     {
         return view('domains.purchasing.livewire.purchase-create')
-            ->layout('layouts.app', ['title' => __('New Purchase')]);
+            ->layout('layouts.app', ['title' => 'Pembelian Baru']);
     }
 }

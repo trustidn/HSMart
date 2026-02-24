@@ -3,7 +3,7 @@
     x-data="{}"
     @focus-pos-barcode.window="document.getElementById('pos-barcode-input')?.focus()"
 >
-    <flux:heading size="xl" class="sr-only lg:not-sr-only">{{ __('Point of Sale') }}</flux:heading>
+    <flux:heading size="xl" class="sr-only lg:not-sr-only">{{ 'Kasir' }}</flux:heading>
 
     <div class="grid h-full min-h-0 grid-cols-1 gap-4 sm:grid-cols-[1fr_400px] sm:gap-6">
         {{-- Kiri: Pencarian + Grid Produk --}}
@@ -13,7 +13,7 @@
                     <flux:input
                         id="pos-barcode-input"
                         wire:model.live.debounce.300ms="barcodeInput"
-                        placeholder="{{ __('Search, scan barcode or SKU') }}"
+                        placeholder="{{ 'Cari, pindai barcode atau SKU' }}"
                         icon="magnifying-glass"
                         autocomplete="off"
                         autofocus
@@ -34,7 +34,7 @@
                                 </button>
                             @empty
                                 <div class="px-3 py-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
-                                    {{ __('No products found. Type name or SKU.') }}
+                                    {{ 'Produk tidak ditemukan. Ketik nama atau SKU.' }}
                                 </div>
                             @endforelse
                         </div>
@@ -67,7 +67,7 @@
                         </button>
                     @empty
                         <div class="col-span-full rounded-xl border border-dashed border-zinc-300 bg-zinc-50/50 py-12 text-center text-zinc-500 dark:border-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400">
-                            {{ __('No active products. Add products first.') }}
+                            {{ 'Belum ada produk aktif. Tambah produk terlebih dahulu.' }}
                         </div>
                     @endforelse
                 </div>
@@ -76,7 +76,7 @@
 
         {{-- Kanan: Keranjang & Pembayaran --}}
         <div class="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900 sm:max-h-[calc(100vh-12rem)] sm:overflow-hidden">
-            <flux:heading size="lg">{{ __('Order') }}</flux:heading>
+            <flux:heading size="lg">{{ 'Pesanan' }}</flux:heading>
 
             <div class="min-h-0 flex-1 space-y-2 overflow-auto">
                 @forelse ($cart as $index => $row)
@@ -101,31 +101,31 @@
                     </div>
                 @empty
                     <p class="py-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
-                        {{ __('Cart is empty. Scan or click products.') }}
+                        {{ 'Keranjang kosong. Pindai atau klik produk.' }}
                     </p>
                 @endforelse
             </div>
 
             <div class="shrink-0 space-y-4 border-t border-zinc-200 pt-4 dark:border-zinc-700">
                 <flux:field>
-                    <flux:label>{{ __('Customer name') }}</flux:label>
+                    <flux:label>{{ 'Nama pelanggan' }}</flux:label>
                     <flux:input wire:model="customerName" />
                 </flux:field>
                 <flux:field>
-                    <flux:label>{{ __('Payment method') }}</flux:label>
+                    <flux:label>{{ 'Metode pembayaran' }}</flux:label>
                     <flux:select wire:model="paymentMethod">
-                        <option value="cash">{{ __('Cash') }}</option>
-                        <option value="transfer">{{ __('Transfer') }}</option>
-                        <option value="other">{{ __('Other') }}</option>
+                        <option value="cash">{{ 'Tunai' }}</option>
+                        <option value="transfer">{{ 'Transfer' }}</option>
+                        <option value="other">{{ 'Lainnya' }}</option>
                     </flux:select>
                 </flux:field>
                 <div class="rounded-lg bg-zinc-200/50 p-3 dark:bg-zinc-800">
                     <div class="flex justify-between text-sm text-zinc-600 dark:text-zinc-400">
-                        <span>{{ __('Subtotal') }}</span>
+                        <span>{{ 'Subtotal' }}</span>
                         <span>{{ number_format($this->total, 0, ',', '.') }}</span>
                     </div>
                     <flux:heading size="xl" class="mt-1 flex justify-between">
-                        <span>{{ __('Total') }}</span>
+                        <span>{{ 'Total' }}</span>
                         <span>{{ number_format($this->total, 0, ',', '.') }}</span>
                     </flux:heading>
                 </div>
@@ -138,11 +138,11 @@
                     wire:click="openPaymentModal"
                     wire:loading.attr="disabled"
                 >
-                    <span wire:loading.remove>{{ __('Complete Sale') }}</span>
-                    <span wire:loading>{{ __('Processing...') }}</span>
+                    <span wire:loading.remove>{{ 'Selesaikan Penjualan' }}</span>
+                    <span wire:loading>{{ 'Memproses...' }}</span>
                 </flux:button>
                 @if (session()->has('sale-completed'))
-                    <flux:callout variant="success">{{ __('Sale completed successfully.') }}</flux:callout>
+                    <flux:callout variant="success">{{ 'Penjualan berhasil diselesaikan.' }}</flux:callout>
                 @endif
             </div>
         </div>
@@ -160,8 +160,8 @@
                 class="max-h-[90vh] w-full max-w-lg overflow-auto rounded-xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-700 dark:bg-zinc-800"
                 wire:click.stop
             >
-                <flux:heading size="lg" id="payment-modal-title">{{ __('Confirm Payment') }}</flux:heading>
-                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{{ __('Review items and enter amount paid. After confirm, receipt will be printed and sale completed.') }}</p>
+                <flux:heading size="lg" id="payment-modal-title">{{ 'Konfirmasi Pembayaran' }}</flux:heading>
+                <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{{ 'Periksa item dan masukkan jumlah bayar. Setelah konfirmasi, struk akan dicetak dan penjualan selesai.' }}</p>
 
                 <div class="mt-4 max-h-48 space-y-2 overflow-auto rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-800">
                     @foreach ($cart as $row)
@@ -174,13 +174,13 @@
 
                 <div class="mt-4 rounded-lg border border-zinc-200 bg-zinc-100 p-3 dark:border-zinc-700 dark:bg-zinc-800">
                     <div class="flex justify-between font-medium">
-                        <span>{{ __('Total') }}</span>
+                        <span>{{ 'Total' }}</span>
                         <span>{{ number_format($this->total, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
                 <flux:field class="mt-4">
-                    <flux:label>{{ __('Amount paid') }}</flux:label>
+                    <flux:label>{{ 'Jumlah bayar' }}</flux:label>
                     <flux:input
                         type="text"
                         inputmode="decimal"
@@ -193,7 +193,7 @@
                 @if ((float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', $amountPaid)) >= $this->total)
                     <div class="mt-4 rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-900/30">
                         <div class="flex justify-between font-medium text-green-800 dark:text-green-200">
-                            <span>{{ __('Change') }}</span>
+                            <span>{{ 'Kembalian' }}</span>
                             <span>{{ number_format($this->change, 0, ',', '.') }}</span>
                         </div>
                     </div>
@@ -201,15 +201,15 @@
 
                 <div class="mt-6 flex gap-2">
                     <flux:button variant="primary" class="flex-1" wire:click="confirmAndPay" wire:loading.attr="disabled">
-                        <span wire:loading.remove>{{ __('Confirm & Print Receipt') }}</span>
-                        <span wire:loading>{{ __('Processing...') }}</span>
+                        <span wire:loading.remove>{{ 'Konfirmasi & Cetak Struk' }}</span>
+                        <span wire:loading>{{ 'Memproses...' }}</span>
                     </flux:button>
                     <button
                         type="button"
                         class="flux-btn flux-btn-ghost shrink-0"
                         wire:click="closePaymentModal"
                     >
-                        {{ __('Cancel') }}
+                        {{ 'Batal' }}
                     </button>
                 </div>
             </div>
@@ -240,15 +240,15 @@
                 </div>
                 <div class="space-y-1 py-2 text-sm">
                     <div class="flex justify-between font-medium">
-                        <span>{{ __('Total') }}</span>
+                        <span>{{ 'Total' }}</span>
                         <span>{{ number_format($lastReceipt['total'], 0, ',', '.') }}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span>{{ __('Paid') }}</span>
+                        <span>{{ 'Dibayar' }}</span>
                         <span>{{ number_format($lastReceipt['amount_paid'], 0, ',', '.') }}</span>
                     </div>
                     <div class="flex justify-between font-medium">
-                        <span>{{ __('Change') }}</span>
+                        <span>{{ 'Kembalian' }}</span>
                         <span>{{ number_format($lastReceipt['change'], 0, ',', '.') }}</span>
                     </div>
                 </div>

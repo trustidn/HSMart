@@ -2,11 +2,11 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <flux:heading size="xl">{{ __('User Management') }}</flux:heading>
-                <flux:subheading>{{ __('Create and manage users (Superadmin). Owner can only be created here.') }}</flux:subheading>
+                <flux:heading size="xl">{{ 'Manajemen Pengguna' }}</flux:heading>
+                <flux:subheading>{{ 'Buat dan kelola pengguna (Superadmin). Pemilik tenant hanya bisa dibuat di sini.' }}</flux:subheading>
             </div>
             <flux:button variant="primary" icon="plus" :href="route('admin.users.create')" wire:navigate>
-                {{ __('New User') }}
+                {{ 'Pengguna Baru' }}
             </flux:button>
         </div>
 
@@ -17,10 +17,10 @@
         <flux:table>
             <flux:table.columns>
                 <flux:table.row>
-                    <flux:table.cell variant="strong">{{ __('Name') }}</flux:table.cell>
-                    <flux:table.cell variant="strong">{{ __('Email') }}</flux:table.cell>
-                    <flux:table.cell variant="strong">{{ __('Tenant') }}</flux:table.cell>
-                    <flux:table.cell variant="strong">{{ __('Role') }}</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ 'Nama' }}</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ 'Email' }}</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ 'Tenant' }}</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ 'Peran' }}</flux:table.cell>
                     <flux:table.cell variant="strong" class="w-0"></flux:table.cell>
                 </flux:table.row>
             </flux:table.columns>
@@ -32,11 +32,11 @@
                         <flux:table.cell>{{ $user->tenant?->name ?? '—' }}</flux:table.cell>
                         <flux:table.cell>
                             @if($user->tenant_id === null)
-                                <flux:badge color="zinc">{{ __('Superadmin') }}</flux:badge>
+                                <flux:badge color="zinc">{{ 'Superadmin' }}</flux:badge>
                             @elseif($user->is_tenant_owner)
-                                <flux:badge color="green">{{ __('Owner') }}</flux:badge>
+                                <flux:badge color="green">{{ 'Pemilik' }}</flux:badge>
                             @else
-                                <flux:badge color="blue">{{ __('Member') }}</flux:badge>
+                                <flux:badge color="blue">{{ 'Anggota' }}</flux:badge>
                             @endif
                         </flux:table.cell>
                         <flux:table.cell>
@@ -44,10 +44,10 @@
                                 <flux:button size="sm" variant="ghost" icon="ellipsis-horizontal" />
                                 <flux:menu>
                                     <flux:menu.item icon="pencil" :href="route('admin.users.edit', ['userId' => $user->id])" wire:navigate>
-                                        {{ __('Edit') }}
+                                        {{ 'Ubah' }}
                                     </flux:menu.item>
                                     <flux:menu.item icon="trash" wire:click="confirmDelete({{ $user->id }})" class="text-red-600 dark:text-red-400">
-                                        {{ __('Delete') }}
+                                        {{ 'Hapus' }}
                                     </flux:menu.item>
                                 </flux:menu>
                             </flux:dropdown>
@@ -56,7 +56,7 @@
                 @empty
                     <flux:table.row>
                         <flux:table.cell colspan="5" class="text-center text-zinc-500 dark:text-zinc-400">
-                            {{ __('No users yet.') }}
+                            {{ 'Belum ada pengguna.' }}
                         </flux:table.cell>
                     </flux:table.row>
                 @endforelse
@@ -70,11 +70,11 @@
         @endif
 
         <flux:modal name="confirm-delete-user" :show="(bool) $deleteConfirmUserId" class="space-y-4">
-            <flux:heading size="lg">{{ __('Delete user?') }}</flux:heading>
-            <flux:text>{{ __('This user will be removed. This cannot be undone.') }}</flux:text>
+            <flux:heading size="lg">{{ 'Hapus pengguna?' }}</flux:heading>
+            <flux:text>{{ 'Pengguna ini akan dihapus. Tindakan ini tidak dapat dibatalkan.' }}</flux:text>
             <div class="flex justify-end gap-2">
-                <flux:button variant="ghost" wire:click="cancelDelete">{{ __('Cancel') }}</flux:button>
-                <flux:button variant="danger" wire:click="deleteUser">{{ __('Delete') }}</flux:button>
+                <flux:button variant="ghost" wire:click="cancelDelete">{{ 'Batal' }}</flux:button>
+                <flux:button variant="danger" wire:click="deleteUser">{{ 'Hapus' }}</flux:button>
             </div>
         </flux:modal>
     </div>

@@ -1,23 +1,23 @@
 <div>
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <flux:heading size="xl">{{ __('Suppliers') }}</flux:heading>
+                <flux:heading size="xl">{{ 'Pemasok' }}</flux:heading>
                 <flux:button variant="primary" icon="plus" :href="route('purchasing.suppliers.create')" wire:navigate>
-                    {{ __('New Supplier') }}
+                    {{ 'Pemasok Baru' }}
                 </flux:button>
             </div>
 
             <flux:field>
-                <flux:input wire:model.live.debounce.300ms="search" :placeholder="__('Search by name, contact, phone...')" icon="magnifying-glass" />
+                <flux:input wire:model.live.debounce.300ms="search" :placeholder="'Cari nama, kontak, telepon...'" icon="magnifying-glass" />
             </flux:field>
 
             <flux:table>
                 <flux:table.columns>
                     <flux:table.row>
-                        <flux:table.cell variant="strong">{{ __('Name') }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ __('Contact') }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ __('Phone') }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ __('Address') }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Nama' }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Kontak' }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Telepon' }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ 'Alamat' }}</flux:table.cell>
                         <flux:table.cell variant="strong" class="w-0"></flux:table.cell>
                     </flux:table.row>
                 </flux:table.columns>
@@ -30,14 +30,14 @@
                             <flux:table.cell>{{ \Illuminate\Support\Str::limit($supplier->address, 40) ?: '—' }}</flux:table.cell>
                             <flux:table.cell>
                                 <flux:button size="sm" variant="ghost" icon="pencil" :href="route('purchasing.suppliers.edit', ['supplierId' => $supplier->id])" wire:navigate>
-                                    {{ __('Edit') }}
+                                    {{ 'Ubah' }}
                                 </flux:button>
                             </flux:table.cell>
                         </flux:table.row>
                     @empty
                         <flux:table.row>
                             <flux:table.cell colspan="5" class="text-center text-zinc-500 dark:text-zinc-400">
-                                {{ __('No suppliers found.') }}
+                                {{ 'Tidak ada pemasok.' }}
                             </flux:table.cell>
                         </flux:table.row>
                     @endforelse

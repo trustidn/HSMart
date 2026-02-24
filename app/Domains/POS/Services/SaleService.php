@@ -22,10 +22,10 @@ class SaleService
     {
         $tenant = $this->resolveTenant();
         if ($tenant === null) {
-            throw new \DomainException(__('Tenant not found.'));
+            throw new \DomainException('Tenant tidak ditemukan.');
         }
         if (! app(SubscriptionService::class)->canCreateSale($tenant)) {
-            throw new \DomainException(__('Subscription has expired. You cannot create new sales.'));
+            throw new \DomainException('Langganan telah berakhir. Anda tidak dapat membuat penjualan baru.');
         }
         $this->validateStock($tenant, $items);
 

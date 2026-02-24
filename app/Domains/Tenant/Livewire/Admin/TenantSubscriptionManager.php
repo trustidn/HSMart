@@ -44,7 +44,7 @@ class TenantSubscriptionManager extends Component
         app(SubscriptionService::class)->addSubscriptionByPlan($tenant, (int) $this->selected_plan_id, [
             'status' => $this->status,
         ]);
-        session()->flash('subscription_message', __('Subscription added.'));
+        session()->flash('subscription_message', 'Langganan berhasil ditambahkan.');
         $this->selected_plan_id = null;
         $this->redirectRoute('admin.tenants.edit', ['tenantId' => $this->tenantId], navigate: true);
     }
@@ -56,7 +56,7 @@ class TenantSubscriptionManager extends Component
             abort(403);
         }
         app(SubscriptionService::class)->approveSubscription($subscription);
-        session()->flash('subscription_message', __('Subscription approved and activated.'));
+        session()->flash('subscription_message', 'Langganan disetujui dan diaktifkan.');
         $this->redirectRoute('admin.tenants.edit', ['tenantId' => $this->tenantId], navigate: true);
     }
 
@@ -70,7 +70,7 @@ class TenantSubscriptionManager extends Component
             abort(403);
         }
         app(SubscriptionService::class)->extendSubscription($subscription, $this->extendDays);
-        session()->flash('subscription_message', __('Subscription extended.'));
+        session()->flash('subscription_message', 'Langganan diperpanjang.');
         $this->extendSubscriptionId = null;
         $this->extendDays = 30;
         $this->redirectRoute('admin.tenants.edit', ['tenantId' => $this->tenantId], navigate: true);
