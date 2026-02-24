@@ -76,7 +76,7 @@
                     <flux:button
                         variant="primary"
                         type="submit"
-                        class="w-full"
+                        class="w-full auth-btn-primary"
                     >
                         {{ 'Lanjutkan' }}
                     </flux:button>

@@ -114,6 +114,9 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ 'Beranda' }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="cog-6-tooth" :href="route('admin.platform-settings')" :current="request()->routeIs('admin.platform-settings')" wire:navigate>
+                        {{ 'Pengaturan Platform' }}
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="building-office-2" :href="route('admin.tenants')" :current="request()->routeIs('admin.tenants*')" wire:navigate>
                         {{ 'Kelola Tenant' }}
                     </flux:sidebar.item>

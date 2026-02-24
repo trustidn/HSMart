@@ -43,7 +43,7 @@
             <flux:checkbox name="remember" :label="'Ingat saya'" :checked="old('remember')" />
 
             <div class="flex items-center justify-end">
-                <flux:button variant="primary" type="submit" class="w-full" data-test="login-button">
+                <flux:button variant="primary" type="submit" class="w-full auth-btn-primary" data-test="login-button">
                     {{ 'Masuk' }}
                 </flux:button>
             </div>

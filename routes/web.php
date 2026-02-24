@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Platform\Livewire\PlatformSettings;
 use App\Domains\POS\Livewire\PosPage;
 use App\Domains\Product\Livewire\ProductDetail;
 use App\Domains\Product\Livewire\ProductForm;
@@ -70,6 +71,7 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant'])->group(funct
 });
 
 Route::middleware(['auth', 'verified', 'tenant', 'superadmin'])->group(function () {
+    Route::livewire('admin/platform-settings', PlatformSettings::class)->name('admin.platform-settings');
     Route::livewire('admin/plans', PlanIndex::class)->name('admin.plans');
     Route::livewire('admin/plans/create', PlanForm::class)->name('admin.plans.create');
     Route::livewire('admin/plans/{planId}/edit', PlanForm::class)->name('admin.plans.edit');

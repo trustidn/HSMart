@@ -18,7 +18,7 @@
                 placeholder="email@example.com"
             />
 
-            <flux:button variant="primary" type="submit" class="w-full" data-test="email-password-reset-link-button">
+            <flux:button variant="primary" type="submit" class="w-full auth-btn-primary" data-test="email-password-reset-link-button">
                 {{ 'Kirim tautan reset kata sandi' }}
             </flux:button>
         </form>

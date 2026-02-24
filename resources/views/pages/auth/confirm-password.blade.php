@@ -20,7 +20,7 @@
                 viewable
             />
 
-            <flux:button variant="primary" type="submit" class="w-full" data-test="confirm-password-button">
+            <flux:button variant="primary" type="submit" class="w-full auth-btn-primary" data-test="confirm-password-button">
                 {{ 'Konfirmasi' }}
             </flux:button>
         </form>
