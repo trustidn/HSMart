@@ -8,6 +8,7 @@ use App\Domains\Purchasing\Livewire\PurchaseCreate;
 use App\Domains\Purchasing\Livewire\PurchaseIndex;
 use App\Domains\Purchasing\Livewire\SupplierForm;
 use App\Domains\Purchasing\Livewire\SupplierIndex;
+use App\Domains\Reporting\Http\ReportExportController;
 use App\Domains\Reporting\Livewire\ReportDashboard;
 use App\Domains\Settings\Livewire\WhiteLabelSettings;
 use App\Domains\Subscription\Livewire\Admin\PlanForm;
@@ -55,6 +56,14 @@ Route::middleware(['auth', 'verified', 'tenant', 'require.tenant'])->group(funct
         Route::livewire('purchases/create', PurchaseCreate::class)->name('purchases.create')->middleware('subscription');
     });
     Route::livewire('reports', ReportDashboard::class)->name('reports');
+    Route::prefix('reports/export')->name('reports.export.')->group(function () {
+        Route::get('sales/pdf', [ReportExportController::class, 'salesPdf'])->name('sales.pdf');
+        Route::get('sales/excel', [ReportExportController::class, 'salesExcel'])->name('sales.excel');
+        Route::get('top-products/pdf', [ReportExportController::class, 'topProductsPdf'])->name('top-products.pdf');
+        Route::get('top-products/excel', [ReportExportController::class, 'topProductsExcel'])->name('top-products.excel');
+        Route::get('stock/pdf', [ReportExportController::class, 'stockPdf'])->name('stock.pdf');
+        Route::get('stock/excel', [ReportExportController::class, 'stockExcel'])->name('stock.excel');
+    });
     Route::livewire('settings/white-label', WhiteLabelSettings::class)->name('settings.white-label');
 });
 

@@ -49,6 +49,22 @@ class ReportService
     }
 
     /**
+     * Semua penjualan dalam periode untuk export (tanpa pagination, max 5000).
+     *
+     * @return \Illuminate\Support\Collection<int, Sale>
+     */
+    public function getLaporanPenjualanForExport(string $from, string $to): Collection
+    {
+        return Sale::query()
+            ->where('status', 'completed')
+            ->whereBetween('sale_date', [$from, $to])
+            ->orderByDesc('sale_date')
+            ->orderByDesc('id')
+            ->limit(5000)
+            ->get();
+    }
+
+    /**
      * Top produk by quantity terjual dalam periode.
      *
      * @return Collection<int, object{product_id: int, product_name: string, product_sku: string, total_qty: int, total_revenue: float}>

@@ -81,7 +81,17 @@
             </div>
 
             <flux:card>
-                <flux:heading size="lg" class="mb-4">{{ __('Sales report') }}</flux:heading>
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+                    <flux:heading size="lg">{{ __('Sales report') }}</flux:heading>
+                    <div class="flex gap-2">
+                        <flux:button size="sm" variant="ghost" icon="arrow-down-tray" :href="route('reports.export.sales.pdf', ['date_from' => $date_from, 'date_to' => $date_to])" target="_blank">
+                            PDF
+                        </flux:button>
+                        <flux:button size="sm" variant="ghost" icon="document-duplicate" :href="route('reports.export.sales.excel', ['date_from' => $date_from, 'date_to' => $date_to])" target="_blank">
+                            Excel
+                        </flux:button>
+                    </div>
+                </div>
                 <flux:table>
                     <flux:table.columns>
                         <flux:table.row>
@@ -116,7 +126,17 @@
             </flux:card>
 
             <flux:card>
-                <flux:heading size="lg" class="mb-4">{{ __('Top products') }}</flux:heading>
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+                    <flux:heading size="lg">{{ __('Top products') }}</flux:heading>
+                    <div class="flex gap-2">
+                        <flux:button size="sm" variant="ghost" icon="arrow-down-tray" :href="route('reports.export.top-products.pdf', ['date_from' => $date_from, 'date_to' => $date_to])" target="_blank">
+                            PDF
+                        </flux:button>
+                        <flux:button size="sm" variant="ghost" icon="document-duplicate" :href="route('reports.export.top-products.excel', ['date_from' => $date_from, 'date_to' => $date_to])" target="_blank">
+                            Excel
+                        </flux:button>
+                    </div>
+                </div>
                 <flux:table>
                     <flux:table.columns>
                         <flux:table.row>
@@ -146,11 +166,21 @@
             </flux:card>
 
             <flux:card>
-                <div class="mb-4 flex items-center justify-between">
-                    <flux:heading size="lg">{{ __('Stock report') }}</flux:heading>
-                    <flux:field class="mb-0">
-                        <flux:checkbox wire:model.live="low_stock_only" :label="__('Low stock only')" />
-                    </flux:field>
+                <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-4">
+                        <flux:heading size="lg">{{ __('Stock report') }}</flux:heading>
+                        <flux:field class="mb-0">
+                            <flux:checkbox wire:model.live="low_stock_only" :label="__('Low stock only')" />
+                        </flux:field>
+                    </div>
+                    <div class="flex gap-2">
+                        <flux:button size="sm" variant="ghost" icon="arrow-down-tray" :href="route('reports.export.stock.pdf', ['low_stock_only' => $low_stock_only])" target="_blank">
+                            PDF
+                        </flux:button>
+                        <flux:button size="sm" variant="ghost" icon="document-duplicate" :href="route('reports.export.stock.excel', ['low_stock_only' => $low_stock_only])" target="_blank">
+                            Excel
+                        </flux:button>
+                    </div>
                 </div>
                 <flux:table>
                     <flux:table.columns>
