@@ -2,6 +2,7 @@
 
 namespace App\Domains\Product\Models;
 
+use App\Domains\POS\Models\SaleItem;
 use App\Domains\Purchasing\Models\PurchaseItem;
 use App\Models\Concerns\BelongsToTenant;
 use Database\Factories\ProductFactory;
@@ -66,6 +67,16 @@ class Product extends Model
     public function purchaseItems(): HasMany
     {
         return $this->hasMany(PurchaseItem::class);
+    }
+
+    /**
+     * Sale items (sales that included this product).
+     *
+     * @return HasMany<SaleItem, $this>
+     */
+    public function saleItems(): HasMany
+    {
+        return $this->hasMany(SaleItem::class);
     }
 
     public function imageUrl(): ?string

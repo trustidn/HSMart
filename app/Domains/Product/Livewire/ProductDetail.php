@@ -4,6 +4,8 @@ namespace App\Domains\Product\Livewire;
 
 use App\Domains\Product\Services\ProductService;
 use Illuminate\Support\Facades\Route;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ProductDetail extends Component
@@ -26,6 +28,29 @@ class ProductDetail extends Component
     }
 
     /**
+     * Sales stats for this product: total quantity sold and total sales value.
+     *
+     * @return array{total_qty: int, total_value: float}
+     */
+    #[Computed]
+    public function salesStats(): array
+    {
+        $product = $this->product;
+        if ($product === null) {
+            return ['total_qty' => 0, 'total_value' => 0.0];
+        }
+
+        $row = $product->saleItems()
+            ->selectRaw('COALESCE(SUM(qty), 0) as total_qty, COALESCE(SUM(subtotal), 0) as total_value')
+            ->first();
+
+        return [
+            'total_qty' => (int) ($row->total_qty ?? 0),
+            'total_value' => (float) ($row->total_value ?? 0),
+        ];
+    }
+
+    /**
      * Purchase items for this product (with purchase loaded for date).
      */
     public function getPurchaseItemsProperty()
@@ -40,6 +65,17 @@ class ProductDetail extends Component
             ->orderByDesc('id')
             ->limit(50)
             ->get();
+    }
+
+    public function openAdjustStock(int $productId): void
+    {
+        $this->dispatch('open-stock-adjustment', productId: $productId)->to(StockAdjustment::class);
+    }
+
+    #[On('stock-adjusted')]
+    public function onStockAdjusted(): void
+    {
+        // Re-render so product stock and stats stay in sync.
     }
 
     public function render()

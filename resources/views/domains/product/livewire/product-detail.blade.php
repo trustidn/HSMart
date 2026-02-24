@@ -39,6 +39,23 @@
                         @if ($this->product->isLowStock())
                             <flux:badge color="red" class="mt-2">{{ __('Low stock') }}</flux:badge>
                         @endif
+                        <flux:button size="sm" variant="ghost" class="mt-3" wire:click="openAdjustStock({{ $this->product->id }})" icon="adjustments-horizontal">
+                            {{ __('Adjust Stock') }}
+                        </flux:button>
+                    </flux:card>
+
+                    <flux:card>
+                        <flux:heading size="base">{{ __('Sales') }}</flux:heading>
+                        <div class="mt-2 space-y-2">
+                            <div class="flex items-baseline justify-between gap-2">
+                                <flux:text class="text-zinc-500">{{ __('Quantity sold') }}</flux:text>
+                                <flux:heading size="lg">{{ number_format($this->salesStats['total_qty'], 0, ',', '.') }}</flux:heading>
+                            </div>
+                            <div class="flex items-baseline justify-between gap-2">
+                                <flux:text class="text-zinc-500">{{ __('Total sales value') }}</flux:text>
+                                <flux:heading size="lg">Rp {{ number_format($this->salesStats['total_value'], 0, ',', '.') }}</flux:heading>
+                            </div>
+                        </div>
                     </flux:card>
                 </div>
 
@@ -78,4 +95,6 @@
             </div>
         @endif
     </div>
+
+    @livewire(\App\Domains\Product\Livewire\StockAdjustment::class)
 </div>

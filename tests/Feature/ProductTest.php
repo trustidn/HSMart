@@ -56,6 +56,17 @@ test('cannot create product with duplicate sku', function () {
         ->assertHasErrors('sku');
 });
 
+test('product detail page shows product, sales stats and adjust stock button', function () {
+    $product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Detail Product', 'stock' => 5]);
+
+    Livewire::test(\App\Domains\Product\Livewire\ProductDetail::class, ['productId' => $product->id])
+        ->assertOk()
+        ->assertSee('Detail Product')
+        ->assertSee('Adjust Stock')
+        ->assertSee('Quantity sold')
+        ->assertSee('Total sales value');
+});
+
 test('can update product', function () {
     $product = Product::factory()->create(['tenant_id' => $this->tenant->id, 'name' => 'Old Name']);
 
